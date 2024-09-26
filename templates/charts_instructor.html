@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>PED學習分析系統</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="../6869/static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="../6869/static/css/sb-admin-2.min.css" rel="stylesheet">
+
+    <!-- DataTables  -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.25/datatables.min.css"/>
+
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.25/datatables.min.js"></script>
+
+</head>
+
+<body id="page-top">
+<div class="modal">請稍候...</div>
+<!--<div style="width:100%; clear:both;"> 00</div>-->
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <div class="sidebar-brand-icon rotate-n-15"></div>
+            <div class="sidebar-brand" id="teacher_name">教官</div>
+
+            <div class="sidebar-heading" id="sideblock_1" style="visibility: visible;">
+                班級列表
+            </div>
+            <hr class="sidebar-divider">
+
+            <ul class="nav flex-column" id="class_sidebar"></ul>
+                <!-- 這裡將動態生成的系，年級和班級 -->
+            <hr class="sidebar-divider">
+            
+            <li class="nav-item" id="sideblock_2" style="visibility: visible;">
+                <a class="nav-link collapsed" onclick="showAnalysisModal()" href="#" data-toggle="collapse" data-target="#collapsePages"
+                    aria-expanded="true" aria-controls="collapsePages">
+                    <span style="color: #f1f7ff;">身份分析比較圖</span> <!-- 添加 text-white 類 -->
+                </a>
+            </li>
+           
+            
+            
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-light bg-white topbar mb-4 static-top shadow">
+                    <div class="col-lg-12" style="float:left;padding: auto; height:150px;">
+                        <div class=" col-lg-9" style="float:left;">
+                            <img src="static/img/logoPEDsystem.png" width="350" height="85" alt="學習成效及參與評估系統">
+                        </div>
+                        <div class="col-lg-3" style="float:right; width:25%">
+                            <ul id="pageBtnS">
+                                <li><a href="index.html" title="回到系統首頁">Home</a></li>
+                                <li><a type="button" class="popupbtn" onclick='showModal1()' title="使用說明">Help</a></li>
+                                <li><a onclick='storge_course_id()' href="P_mods" target="_blank" title="查看各區學生名單">學生分區</a></li>
+                                <li><a href="https://forms.office.com/r/pm8fxkz9uG" target="_blank" rel="noreferrer noopenner" title="申請遠距教學中心專人服務">服務申請</a></li>
+                                <!--<li><a href="http://web.tku.edu.tw/iclassdashboard" target="_blank">iClass儀表板</a></li>-->
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+                <!-- End of Topbar -->
+                    
+            </div>
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid"  id="infoblock_1" >
+
+                <h1 class="h4 mb-2 text-gray-800 pa-left" id='label_course_name'>以下是您本學期每位學生的學習表現：
+                    <button id="resetFilter" style="border-radius: 5px; font-size: 1em;">還原</button>
+                    <label><input type="checkbox" id="filterP1"> P1</label>
+                    <label><input type="checkbox" id="filterP2"> P2</label>
+                    <label><input type="checkbox" id="filterP3"> P3</label>
+                    <button class="open-btn" onclick="showAnalysisModal()">顯示學習分析比較圖</button>
+                </h1>
+
+                <!-- Content Row -->
+                
+                <div class="row">
+                    <div class="col-xl-8 col-lg-7">
+                        <div class="card shadow mb-4" id="table-container" style="max-height: 600px; overflow-y: auto; margin-bottom: 40px;"> <!-- Add margin-bottom -->
+                            <table id="tbl_course_list" style="width: 100%;">
+                                <colgroup span="4"></colgroup>
+                                <tr>
+                                    <th>學生學號</th>
+                                    <th>學生姓名<input type="text" id="name-search" placeholder="搜索學生姓名..."></th>
+                                    <th>學生身份</th>
+                                    <th>學習表現</th>
+                                </tr>
+                                <!-- Student rows will be populated here -->
+                            </table>
+                        </div>
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">折線圖</h6>
+                            </div>
+                            <div id='container-pe-student'></div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xl-4 col-lg-5">
+                        <div class="card shadow mb-4"></div>
+                        <!-- Card Header - Dropdown -->
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary"> 學生與班級平均的盒狀圖</h6>
+                                <div style="display: flex; align-items: center;">
+                                    目前週次:
+                                    <h3 id="week" style="font-size: 2em;"></h3>
+                                    <select id="selectWeek" onchange='set_week()' style="border-radius: 5px; font-size: 1em;"></select>
+                                    <input id="week_last" type="button" value="<<上一週" onclick="last_week()" style="border-radius: 5px; font-size: 1em;">
+                                    <input id="week_next" type="button" value="次一週>>" onclick="next_week()" style="border-radius: 5px; font-size: 1em;">
+                                </div>
+                                <div id="container-classVSstudent"></canvas>
+                                資料更新日期：2023.11.13 <p>
+                          
+                          </div>
+                        </div>
+                    </div>
+                    </div>
+                    
+                        
+                    </div>
+                </div>
+               
+            </div>
+            <!-- /.container-fluid -->
+
+            <!-- Advisor Edition -->
+            <div class="container-fluid"  id="infoblock_2" style="display: none;">
+                
+
+                
+            </div>
+            <!-- End of Advisor Edition -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; 淡江大學　資訊處遠距教學發展中心</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="/login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Pop-up page -->
+    <div class="pop-up-container" style="display: none;">
+        <div class="pop-up-container-root">
+            <div class="pop-up-box">
+                <div class="pop-up-title">
+                    <h4>PED (Performance & Engagement Diagram) 學習分析系統簡介</h4>
+                    <span class="pop-up-close" onclick="closeModal1()">&times;</span>
+                </div>
+                <div class="pop-up-content">
+                    <p>
+                        PED系統是iSignal學習預警機制的一環，是以授課教師為服務對象所開發的系統，
+                        可以呈現每門課程中的整體及個別學生的學習表現。系統透過蒐集、分析iClass平台上大量的學習活動數據後，
+                        將數據max-min數值正規化後等比例縮放到0~1的區間中，並以視覺化儀表板呈現。 
+                    </p>
+                    <p>
+                        PED數據取自iClass平台，記錄學生每門課程的參與情況（例如：出席、繳交作業、
+                        參與測驗、參與討論...等）以及學習成績，是非常客觀的學習證據。只要授課教師在iClass平台上，逐週點名、發布6次以上之教學活動、設定成績比例，並儘早批改給予成績，透過PED系統逐週的計算與轉置，教師便能掌握累計至前一週之全班同學的成績和參與度，從而及時給予優秀學生表揚與學習落後者輔導。系統簡介如下：
+                    </p>
+                    <p>1.登入系統後，畫面左側有授課課程列表，可切換觀看。</p>
+                    <img src="static/img/PED_png/PED_interface.png" alt="PED首頁">
+                    <p>2.畫面中間上方呈現全班學生整體的修課表現，每個學期的PED資料皆於第4週起呈現於系統上（原因：開學前3週資料量少、加退選…等）。 </p>
+                    <img src="static/img/PED_png/PED_xychart.png" alt="PED圖表">
+                    <p>3.X軸為學習成效（Performance），採計作業、測驗、問卷、點名及討論…等，累計<a class="r">分數</a>；Y軸為參與度（Engagement），採計點名、作業及測驗繳交…等，累計<a class="r">次數</a>。</p>
+                    <p>4.平面座標上，以X軸及Y軸劃分為4個象限，以色點呈現學生課業表現分布情形，每個點代表一位學生。象限說明： </p>
+                    <p>&emsp;第I象限<a class="g">綠</a>區：<a class="g">綠</a>點代表表現正常之學生；<a class="b">藍</a>點代表前5%表現最優的學生，其學習參與及學習活動成績表現都足為表率，值得嘉許，可適時表揚，或作為學生助教、小老師的人選參考。 </p>
+                    <p>&emsp;第II象限<a class="y">黃</a>區：學習參與度高但成績表現不如預期，需要師長進一步了解其學習瓶頸，加以輔導。 </p>
+                    <p>&emsp;第III象限<a class="r">紅</a>區：代表學習參與及成績表現均不佳，也許除課業問題外尚需其他生活輔導，可能需要其他師長介入共同輔導（如：導師、教官、諮輔專業人員）。 </p>
+                    <p>&emsp;第IV象限<a class="y">黃</a>區：代表學生可能已了解授課內容，以致參與度差但成績表現尚可，教師可以規劃並鼓勵學生研習進階課程。 </p>
+                    <p>5.畫面右側為各區分佈情況，游標靠近時會呈現該區之人數及比例 </p>
+                    <img src="../static/img/PED_png/PED_piechart1.png" alt="PED扇形圖">
+                    <img src="../static/img/PED_png/PED_piechart2.png" alt="PED扇形圖2">
+                    <p>6.畫面中間下方呈現個別學生表現（教師可從全班的PED上，或從下拉選單中點選學生），以折線圖觀察指定學生逐週之學習成效（藍線）和參與度（黑線）。 </p>
+                    <img src="../static/img/PED_png/PED_linechart.png" alt="PED折線圖">
+                    <p>7.畫面右下方呈現學生名單：第II、III、IV象限皆為該區之名單，唯綠區所呈現為前5%表現最優的學生（<a class="b">藍點</a>）。 </p>
+                    <img src="../static/img/PED_png/PED_stu_classify.png" alt="PED學生分類">
+                    <p>8.<a class="r">授課教師</a>可從PED的4個象限中，精準地發現學習落後或是參與情況不佳的學生，以便適時進行課業輔導、勉勵學習，或是調整教學策略與節奏。</p>
+                    <p>9.PED所呈現之每位學生各科的燈號已匯入SIS（導師輔導系統），使<a class="r">班導師</a>能了解導生每週的學習成效與學習態度，掌握需要關懷的對象，並得以適時介入輔導，以提升學生的留校率與畢業率。 </p>
+                </div>
+
+                <div class="pop-up-action">
+                    <button class="close-btn" onclick='closeModal1()'>關閉</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="pop-up-container" id="analysisModal" style="display: none;">
+        <div class="pop-up-container-root">
+            <div class="pop-up-box">
+                <div class="pop-up-title">
+                    <h4>學習分析比較圖</h4>
+                    <span class="pop-up-close" onclick="closeAnalysisModal()">&times;</span>
+                </div>
+                <div class="pop-up-content">
+                    <div class="row"> <!-- 添加 row 以創建行 -->
+                        <div class="col-xl-6 col-lg-6"> <!-- 修改列寬，使兩個卡片各佔一半 -->
+                            <div class="card shadow mb-4">
+                                <!-- Card Header - Attendance -->
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">不同身分比較 - 出席率</h6>
+                                    <div id="container-attendance"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-lg-6"> <!-- 同樣的修改 -->
+                            <div class="card shadow mb-4">
+                                <!-- Card Header - Performance -->
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">不同身分比較 - 表現</h6>
+                                    <div id="container-performance"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="pop-up-action">
+                    <button class="close-btn" onclick='closeAnalysisModal()'>關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Pop-up page JavaScritp -->
+    <script>
+        function showModal1(){
+
+            const modalWrap =  document.querySelector('.pop-up-container');
+            
+            const popup =  modalWrap.querySelector('.pop-up-box');
+            
+            modalWrap.style.display = 'flex';
+            popup.style.transform = 'scale(0)';
+            
+            setTimeout(()=>  popup.style.transform = 'scale(1)',0)
+        }
+
+        function closeModal1(){
+            
+            const modalWrap =  document.querySelector('.pop-up-container');
+            
+            const popup =  modalWrap.querySelector('.pop-up-box');
+            
+            popup.style.transform = 'scale(0)';
+            
+            setTimeout(()=> modalWrap.style.display = 'none',300)
+        }
+        function showAnalysisModal() {
+            const modalWrap = document.getElementById('analysisModal');
+            const popup = modalWrap.querySelector('.pop-up-box');
+            modalWrap.style.display = 'flex';
+            popup.style.transform = 'scale(0)';
+            
+            setTimeout(() => popup.style.transform = 'scale(1)', 0);
+        }
+
+        function closeAnalysisModal() {
+            const modalWrap = document.getElementById('analysisModal');
+            const popup = modalWrap.querySelector('.pop-up-box');
+            popup.style.transform = 'scale(0)';
+            
+            setTimeout(() => modalWrap.style.display = 'none', 300);
+        }
+    </script>
+
+    
+<script>
+
+</script>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="../static/vendor/jquery/jquery.min.js"></script>
+    <script src="../static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="../static/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="../static/js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="../static/vendor/chart.js/Chart.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="../static/js/demo/chart-area-demo.js"></script>
+    <script src="../static/js/demo/chart-pie-demo.js"></script>
+    <script src="../static/js/demo/chart-bar-demo.js"></script>
+
+</body>
+<style>
+/* Start by setting display:none to make this hidden.
+   Then we position it in relation to the viewport window
+   with position:fixed. Width, height, top and left speak
+   for themselves. Background we set to 80% white with
+   our animation centered, and no-repeating */
+.modal {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 ) 
+                url('http://i.stack.imgur.com/FhHRx.gif') 
+                50% 50% 
+                no-repeat;
+}
+
+/* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+body.loading .modal {
+    overflow: hidden;   
+}
+
+/* Anytime the body has the loading class, our
+   modal element will be visible */
+body.loading .modal {
+    display: block;
+}
+
+#divSemiCirclePieChart {
+    height: 400px;
+}
+
+.highcharts-data-table table {
+    font-family: Verdana, sans-serif;
+    border-collapse: collapse;
+    border: 1px solid #ebebeb;
+    margin: 10px auto;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+.highcharts-data-table caption {
+    padding: 1em 0;
+    font-size: 1.2em;
+    color: #555;
+}
+
+.highcharts-data-table tr:hover {
+    background: #f1f7ff;
+}
+</style>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="https://code.highcharts.com/modules/boxplot.js"></script>
+<script>
+//__local_API_ADDR='http://20.205.206.44:7071/'
+//__local_API_ADDR='http://20.212.230.118:7071/';
+//__local_API_ADDR='https://bida.ipc.tku.edu.tw/pedev/7071/';
+__local_API_ADDR='https://sso.tku.edu.tw/oisbida/pedev/7071/';
+pe_series = [];
+course_name = '';
+
+//setweek
+_currentWeek=18;
+_currentCategories= [1,2,3,4,5,6,7,8,9];
+_traverseWeek=_currentWeek;
+
+p_thres=e_thres=0.6;
+_last_pt_color='';
+
+var scatter_color = {
+    "0": 'rgba(97, 172, 214, .5)',
+    "+1": 'rgba(126, 216, 147, .5)',
+    "+2": 'rgba(42, 176, 73, .5)',
+    "-1": 'rgba(231, 131, 133, .5)',
+    "-2": 'rgba(176, 42, 44, .5)',
+}
+
+course_data = []
+
+$body = $("body");
+
+$(document).on({
+    ajaxStart: function() { $body.addClass("loading");    },
+     ajaxStop: function() { $body.removeClass("loading"); }    
+});
+
+$(document).ready(function(){ 
+    input_teacherId();
+    input_studentData();
+});
+
+function onSelect_student(){
+
+   //alert(window.course_id);
+   //alert($("#ddlStudents option:selected").text());
+   draw_student_pe( window.course_id, $("#ddlStudents").val(), $("#ddlStudents option:selected").text());
+}
+
+function input_teacherId(){
+    
+    //const tid = window.localStorage.getItem("teacher_id") || [];
+    const instructor_id = window.localStorage.getItem("instructor_id") || 153608;
+    //tid = 153608;
+    //const tid = 127504;
+    url_text = __local_API_ADDR + 'get_instructor_name?instructor_id='+instructor_id//get teacher name
+    $.ajax({
+        url : url_text,
+        type : "GET",
+        success : function(data) {
+            const instructorName = data[0].instructor_name;
+            document.getElementById('teacher_name').textContent =  instructorName+ "教官";
+        }
+    });
+    
+    t_id = instructor_id.toString();
+    if (t_id.length==5){
+        t_id = '0' + t_id;
+    }
+    if (t_id.length==4){
+        t_id = '00' + t_id;
+    }
+    if (t_id.length==3){
+        t_id = '000' + t_id;
+    }
+    //alert(t_id);
+    
+    // 1. call API to retrieve course info
+    // 2. list all course by checkbox
+    // 3. display all course's activity count
+    
+    
+    url_text = __local_API_ADDR + "get_course_list_by_teacherid?semester=1122&teacher_id="+t_id
+    
+    $.ajax({
+        url: url_text,
+        type: "GET"
+    }).error( function(request, error) {
+        alert("Error: responseText: " + request.responseText);    
+    }).success( function(getCourseData) {
+    
+        if (getCourseData == JSON.stringify({})) {
+            alert("您這學期並未於iClass平台上擔任其中一門課程的授課教師！");
+            $body.removeClass("loading");
+            location.href = "index";
+            return;
+        }
+        
+        course_list = JSON.parse(getCourseData);
+        //window.alert(course_list.length)
+        
+    });
+}
+let firstCheck = 0;
+
+function storge_course_id(){
+    //alert(course_id);
+    localStorage.setItem("course_id", course_id);
+    localStorage.setItem("semester", semester);
+}
+
+function input_studentData() { 
+    const instructor_id = window.localStorage.getItem("instructor_id") || 153608;
+    url_text = __local_API_ADDR + "get_instructor?instructor_id=" + instructor_id;
+
+    if (firstCheck == 0) {
+        $.ajax({
+            url: url_text,
+            type: "GET"
+        }).error(function(request, error) {
+            alert("Error course is NULL: " + instructor_id + request.responseText + " has no student");
+        }).success(function(getStuData) {
+
+            if (getStuData == JSON.stringify({})) {
+                alert("並無任何與參與度或活動成績有關之iClass課程紀錄！");
+                $body.removeClass("loading");
+                return;
+            }
+
+            stu_list = JSON.parse(getStuData);
+            var table = $('#tbl_course_list');
+            table.empty();
+
+            if (stu_list.length != 0) {
+
+                var row = '<tr>' +
+                    '<th>學生學號</th>' +
+                    '<th>學生姓名<input type="text" id="name-search" placeholder="搜索學生..." style="width: 75px; max-width: 100%;"></th>' +
+                    '<th>學生班級</th>' +
+                    '<th>學生身份' +
+                        '<select id="identity-filter">' +
+                            '<option value="">所有</option>' +
+                            '<option value="申請">申請生</option>' +
+                            '<option value="推甄">推甄生</option>' +
+                            '<option value="轉學">轉學生</option>' +
+                            '<option value="僑生">僑生</option>' +
+                        '</select>' +
+                    '</th>' +
+                    '<th>學習狀況' +
+                        '<select id="attendance-filter">' +
+                            '<option value="default">預設</option>' +
+                            '<option value="asc">升序</option>' +
+                            '<option value="desc">降序</option>' +
+                        '</select>' +
+                    '</th>' +
+                    '<th>成績</th>'+ 
+                    '<th>出席率</th>' +
+                    '<th style="display:none;">課程代碼</th>' + // 隱藏的課程代碼列
+                    '<th style="display:none;">p1</th>' + // 新增隱藏的 p1 列
+                    '<th style="display:none;">p2</th>' + // 新增隱藏的 p2 列
+                    '<th style="display:none;">p3</th>' + // 新增隱藏的 p3 列
+                    '</tr>';
+
+                table.append(row);
+
+                src_g = '<img src="static/img/green.png" width="16" height="16">';
+                src_y = '<img src="static/img/yellow.png" width="16" height="16">';
+                src_o = '<img src="static/img/orange.png" width="16" height="16">';
+                src_r = '<img src="static/img/red.png" width="16" height="16">';
+
+                for (let cl of stu_list) {
+                    let stu_no = cl.stu_no;
+                    let stu_name = cl.stu_name;
+                    let course_name_abbr = cl.course_name_abbr; // 確保這個字段存在於 API 響應中
+                    let course_code_abbr = cl.course_code_abbr; // 確保這個字段存在於 API 響應中
+                    let gp = cl.g_num;
+                    let yp = cl.y_num;
+                    let op = cl.o_num;
+                    let rp = cl.r_num;
+                    let p1_num = cl.p1_num; // 取得 p1 數據
+                    let p2_num = cl.p2_num; // 取得 p2 數據
+                    let p3_num = cl.p3_num; // 取得 p3 數據
+                    let student_identity = cl.stu_Identity_code;
+                    let studentP = Math.round(cl.avg_p * 1000) / 1000; 
+                    let studentE = Math.round(cl.avg_e * 1000) / 1000;
+
+                    const _link = '<a href="javascript:void(0);" onclick="handleStudentClick(\'' + student_identity + '\',' + studentP + ',' + studentE + ', \'' + stu_no + '\', \'' + stu_name + '\');">' + stu_no + '</a>';
+
+                    var identity = document.createElement("a");
+                    let stu_i = cl.stu_Identity;
+
+                    if (stu_i.trim().length != 0) {
+                        identity += stu_i;
+                    }
+
+                    var performance =  parseFloat(gp) + parseFloat(yp); // Calculate the sum of op and rp
+                    var row = '<tr cellpadding="15px">' + 
+                        '<th>' + _link + '</th>' +
+                        '<th>' + stu_name + '</th>' + 
+                        '<th>' + course_name_abbr + '</th>' + // 班級信息
+                        '<th>' + identity + '</th>' +
+                        '<th><span style="display: none;">'+performance+'</span>'+src_g+gp+"  "+src_y+yp+"  "+src_o+op+"  "+src_r+rp+'</th>' +                        
+                        '<th>' + studentP + '</th>' +
+                        '<th>' + studentE + '</th>' +
+                        '<th style="display:none;">' + course_code_abbr + '</th>' + // 隱藏課程代碼
+                        '<th style="display:none;">' + p1_num + '</th>' + // 隱藏的 p1 數據
+                        '<th style="display:none;">' + p2_num + '</th>' + // 隱藏的 p2 數據
+                        '<th style="display:none;">' + p3_num + '</th>' + // 隱藏的 p3 數據
+                    '</tr>';
+                    
+                    table.append(row);
+                }
+            }
+        });
+
+        // 篩選功能
+        $(document).on('input change', '#name-search, #identity-filter, #attendance-filter, #performance-filter', function() {
+            filterTable();
+        });
+    }
+
+    firstCheck = 1;
+}
+
+function handleStudentClick(student_identity, studentP, studentE, stu_no,stu_name) {
+    document.getElementById('selectWeek').innerText = null;
+    document.getElementById('selectWeek').value =_currentWeek;
+    localStorage.setItem("stu_name", stu_name);
+    localStorage.setItem("student_id", stu_no);
+    initial_week();
+    inputploxboxdata(student_identity, studentP, studentE);
+    draw_student_pe(stu_no, stu_name);
+    inputCompareClassDataWithStudent(stu_no,_currentWeek);
+}
+
+roundDown = function( num, decimal ) { 
+    return Math.floor( ( num + Number.EPSILON ) * Math.pow( 10, decimal ) ) / Math.pow( 10, decimal );
+}
+
+function input_studentId(){//and student name
+    //var account = '{{account}}';
+    var account = '411411639';
+    //s_id = window.localStorage.getItem("student_id") || account;
+    s_id = window.localStorage.getItem("student_id");
+    //alert(s_id)
+    
+    __1st_course_id='';
+    
+    var studentNameElement = document.getElementById('student_name');
+    if (studentNameElement !== null) {
+        $.ajax({
+            url: __local_API_ADDR + "get_student_name?student_id=" + s_id,
+            type: "GET",
+            success: function(data) {
+                studentNameElement.textContent = data + "同學";
+            },
+            error: function(xhr, status, error) {
+                console.error("Error fetching student name:", error);
+            }
+        });
+    } else {
+        console.error("Element with ID 'student_name' not found.");
+    }
+    
+    url_text = __local_API_ADDR + "get_course_list_detail?id="+s_id;
+    //url_text = __local_API_ADDR.replace(/^http:/, 'https:') + "get_course_list_detail?id="+s_id;
+    //alert(url_text)
+    
+    this.user_code = s_id;
+    
+    $.ajax({
+        url: url_text,
+        type: "GET"
+    }).error( function(request, error) {
+        alert("Error course is NULL: "+ s_id +request.responseText+" has no course");    
+    }).success( function(getCourseData) {
+    
+
+    
+        if (getCourseData == JSON.stringify({})) {
+            alert("並無任何與參與度或活動成績有關之iClass課程紀錄！");
+            $body.removeClass("loading");
+            //location.href = "index";
+            pageback();
+            return;
+        }
+        
+        course_list = JSON.parse(getCourseData);
+        
+        //alert(course_list);
+        
+        var table = $('#tbl_student_course_list');
+        table.empty(); 
+        
+        _r=0;
+        _y=0;
+        _g=0;
+        _b=0;
+        
+        if (course_list.length!=0){
+        
+            __1st_course_id = course_list[0].course_id;
+            
+            // set id as course_code
+            for (let cl of course_list) {
+                let course_code = cl.code;
+                let course_name = cl.name;
+                let _weeks = cl.weeks;            
+                let _p = cl.p;            
+                let _e = cl.e;            
+                let color = cl.color;     
+                let course_id = cl.course_id;   
+                if (color=='b') {
+                    _g +=1;
+                }
+                else if (color=='g') {
+                    _g +=1;
+                }
+                else if (color=='y') {
+                    _y +=1;
+                }
+                else {
+                    _r +=1; 
+                }
+            }                 
+            
+            draw_student_piechart(_r, _y, _g);
+
+            if (__1st_course_id.length!=0){
+                
+                setTimeout( function() { redraw_student_chart(__1st_course_id, '1122'); }, 300);
+            }
+        }
+    });
+}
+
+// ------------------------------------------------------------------
+function inputploxboxdata(identity_code, studentP, studentE) {
+    url_text = __local_API_ADDR + "get_identity_avg?identity_code="+identity_code;
+    $.ajax({
+        url: url_text,
+        method: 'GET',
+        success: function(data) {
+            var parsedData = JSON.parse(data);
+            showplotbox(parsedData,studentP,studentE);
+        },
+        error: function(xhr, status, error) {
+            console.error('Error fetching data:', error);
+        }
+    });
+}
+
+function showplotbox(data, studentP, studentE) {
+    var categories = [];
+    var attendanceData = [];
+    var performanceData = [];
+    var scatterDataP = [];
+    var scatterDataE = [];
+
+    data.forEach(function(item) {
+        categories.push(item.identity_name);
+
+        // 出席率盒狀圖數據
+        attendanceData.push([
+            item.identity_min_p,
+            item.identity_q1_p,
+            item.identity_median_p,
+            item.identity_q3_p,
+            item.identity_max_p
+        ]);
+
+        // 成績盒狀圖數據
+        performanceData.push([
+            item.identity_min_e,
+            item.identity_q1_e,
+            item.identity_median_e,
+            item.identity_q3_e,
+            item.identity_max_e
+        ]);
+
+        // 为出席率盒状图添加学生数据点
+        scatterDataE.push({
+            x: categories.length - 1,
+            y: studentE
+        });
+
+        // 为成绩盒状图添加学生数据点
+        scatterDataP.push({
+            x: categories.length - 1,
+            y: studentP
+        });
+    });
+
+    // 出席率圖表 (使用藍色)
+    Highcharts.chart('container-attendance', {
+        chart: {
+            type: 'boxplot'
+        },
+        title: {
+            text: '學生出席率比較'
+        },
+        xAxis: {
+            categories: categories,
+            title: {
+                text: '身份'
+            }
+        },
+        yAxis: {
+            title: {
+                text: '出席率 (%)'
+            }
+        },
+        series: [{
+            name: '出席率',
+            data: attendanceData,
+            color: 'blue',
+            tooltip: {
+                headerFormat: '<em>身份 {point.key}</em><br/>'
+            }
+        }, {
+            name: '學生出席率',
+            type: 'scatter',
+            data: scatterDataE,
+            marker: {
+                fillColor: 'blue',
+                lineWidth: 2,
+                lineColor: 'black'
+            },
+            tooltip: {
+                pointFormat: '學生出席率: {point.y}'
+            }
+        }]
+    });
+
+    // 成績圖表 (使用紅色)
+    Highcharts.chart('container-performance', {
+        chart: {
+            type: 'boxplot'
+        },
+        title: {
+            text: '學生成績比較'
+        },
+        xAxis: {
+            categories: categories,
+            title: {
+                text: '身份'
+            }
+        },
+        yAxis: {
+            title: {
+                text: '成績'
+            }
+        },
+        series: [{
+            name: '成績',
+            data: performanceData,
+            color: 'red',
+            tooltip: {
+                headerFormat: '<em>身份 {point.key}</em><br/>'
+            }
+        }, {
+            name: '學生成績',
+            type: 'scatter',
+            data: scatterDataP,
+            marker: {
+                fillColor: 'red',
+                lineWidth: 2,
+                lineColor: 'black'
+            },
+            tooltip: {
+                pointFormat: '學生成績: {point.y}'
+            }
+        }]
+    });
+}
+
+
+// ------------------------------------------------------------------
+
+function draw_student_pe(student_id, student_name,week) {
+    const advisor_id = localStorage.getItem('teacher_id');
+
+    // Check if advisor_id is available
+    if (!advisor_id) {
+        console.error("Advisor ID not found in localStorage");
+        return;
+    }
+
+    let student_url = __local_API_ADDR + "get_student_weekly_avg?stu_no=" + student_id;
+    let advisor_url = __local_API_ADDR + "get_advisor_avg?advisor_id=" + advisor_id;
+
+    $.when(
+        $.ajax({ url: student_url, type: "GET", dataType: "json" }),
+        $.ajax({ url: advisor_url, type: "GET", dataType: "json" })
+    ).done(function(studentData, advisorData) {
+        try {
+
+            // Parse student and advisor data
+            let student_list = studentData[0];
+            let advisor_list = advisorData[0];
+
+            let student_series_p = [];
+            let student_series_e = [];
+            let advisor_avg_p = [];
+            let advisor_avg_e = [];
+            let _categories = [];
+
+            // Determine categories (weeks) based on the semester
+            if (window.semester == '1121') {
+                _categories = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+                _week = _currentWeek;
+            } else {
+                _categories = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+                _week = 18;
+            }
+
+            // Student Data: Push values for performance and engagement
+            for (let el of student_list) {
+                if (el.weeks <= _week) {
+                    let p = parseFloat(el.p);
+                    let e = parseFloat(el.e);
+                    if (!isNaN(p) && !isNaN(e)) {
+                        student_series_p.push(p);
+                        student_series_e.push(e);
+                    } else {
+                        console.warn("Invalid student data:", el);
+                    }
+                }
+            }
+
+            // Advisor Data: Push values for performance and engagement and get avg_p, avg_e
+            for (let el of advisor_list) {
+                if (el.weeks <= _week) {
+                    let p = parseFloat(el.avg_p);
+                    let e = parseFloat(el.avg_e);
+                    if (!isNaN(p) && !isNaN(e)) {
+                        advisor_avg_p.push(p);
+                        advisor_avg_e.push(e);
+                    } else {
+                        console.warn("Invalid advisor data:", el);
+                    }
+                }
+            }
+
+            // Create the Highcharts chart
+            Highcharts.chart('container-pe-student', {
+                chart: {
+                    type: 'line'
+                },
+                title: {
+                    text: student_id + " " + student_name + '的表現與導師班級對比'
+                },
+                subtitle: {
+                    text: ''
+                },
+                xAxis: {
+                    title: {
+                        enabled: true,
+                        text: 'Weeks'
+                    },
+                    categories: _categories
+                },
+                yAxis: {
+                    title: {
+                        enabled: true,
+                        text: 'Values'
+                    },
+                    max: 1.0,
+                    min: 0.0,
+                    plotBands: [{
+                        from: 0,
+                        to: p_thres - 0.1
+                    }, {
+                        from: p_thres - 0.1,
+                        to: p_thres + 0.1
+                    }, {
+                        from: p_thres + 0.1,
+                        to: 1
+                    }],
+                    plotLines: [{
+                        color: 'red',
+                        dashStyle: 'dot',
+                        width: 2,
+                        value: e_thres,
+                        zIndex: 10
+                    }]
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle'
+                },
+                series: [{
+                    name: 'Student Performance',
+                    data: student_series_p
+                }, {
+                    name: 'Student Engagement',
+                    data: student_series_e
+                }, {
+                    name: 'Advisor Average Performance',
+                    data: advisor_avg_p,
+                    dashStyle: 'Solid',  // Solid line for average performance
+                    color: 'blue'
+                }, {
+                    name: 'Advisor Average Engagement',
+                    data: advisor_avg_e,
+                    dashStyle: 'Solid',  // Solid line for average engagement
+                    color: 'orange'
+                }],
+                exporting: {
+                    filename: 'student_vs_advisor_chart'
+                }
+            });
+        } catch (e) {
+            console.error("Error parsing JSON data:", e);
+        }
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        console.error("AJAX request failed:", textStatus, errorThrown);
+    });
+}
+
+// ------------------------------------------------------------------
+
+function initial_week(){
+    
+    document.getElementById('selectWeek').innerText = null;
+    document.getElementById('selectWeek').value =_traverseWeek;
+    document.getElementById('week').textContent = _traverseWeek;
+    
+    let weeks = document.getElementById('selectWeek');
+    for(let g=_traverseWeek; g>0; g--) {
+        let option = document.createElement('option');
+        option.value = g;
+        option.text = g;
+        weeks.appendChild(option);
+    }
+    
+}
+
+function set_week() {
+    let w = document.getElementById('selectWeek').value;
+    document.getElementById('week').textContent = w;
+    _traverseWeek = parseInt(w);
+    
+    const stu_name = localStorage.getItem('stu_name');
+    const student_id = localStorage.getItem('student_id');
+    const advisor_id = localStorage.getItem('advisor_id');  // Assuming you have the advisor ID stored
+
+    // Compare student with the class for the selected week
+    inputCompareClassDataWithStudent( student_id, _traverseWeek);
+}
+
+function last_week() {
+    if (_traverseWeek <= 1) {
+        _traverseWeek = 1;
+    } else {
+        _traverseWeek -= 1;
+    }
+
+    document.getElementById('week').textContent = _traverseWeek;
+    document.getElementById('selectWeek').value = _traverseWeek;
+    
+    const stu_name = localStorage.getItem('stu_name');
+    const student_id = localStorage.getItem('student_id');
+
+    // Compare student with the class for the previous week
+    inputCompareClassDataWithStudent( student_id, _traverseWeek);
+}
+
+function next_week() {
+    if (window.semester == '1122' && _traverseWeek >= _currentWeek) return;
+    else if (window.semester != '1122' && _traverseWeek >= 18) return;
+    else _traverseWeek += 1;
+
+    document.getElementById('week').textContent = _traverseWeek;
+    document.getElementById('selectWeek').value = _traverseWeek;
+    
+    const stu_name = localStorage.getItem('stu_name');
+    const student_id = localStorage.getItem('student_id');
+    const advisor_id = localStorage.getItem('advisor_id');
+
+    // Compare student with the class for the next week
+    inputCompareClassDataWithStudent( student_id, _traverseWeek);
+}
+
+
+function inputCompareClassDataWithStudent(student_id, week) {
+    let student_url = __local_API_ADDR + "get_student_weekly_avg?stu_no=" + student_id + "&weeks=" + week;
+    let advisor_url = __local_API_ADDR + "get_advisor_avg?advisor_id=" + localStorage.getItem('teacher_id') + "&weeks=" + week;
+
+    $.when(
+        $.ajax({ url: student_url, type: "GET", dataType: "json" }),
+        $.ajax({ url: advisor_url, type: "GET", dataType: "json" })
+    ).done(function(studentData, advisorData) {
+        // Assuming studentData and advisorData are arrays from $.when
+        showClassComparisonForCurrentWeek(advisorData[0], studentData[0],week);
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        console.error("AJAX request failed:", textStatus, errorThrown);
+    });
+}
+
+function showClassComparisonForCurrentWeek(advisorData, studentData, currentWeek) {
+    var categories = ['出席率', '成績'];
+    var attendanceData = [];
+    var performanceData = [];
+    var scatterDataP = [];
+    var scatterDataE = [];
+
+    // Process advisor data for the current week
+    if (advisorData.length > 0) {
+        let item = advisorData.find(data => data.weeks == currentWeek);
+        if (item) {
+
+            // Add box plot data for performance and attendance
+            attendanceData.push({
+                x: 0.15,  // Specify the x value for the boxplot
+                low: item.min_e,
+                q1: item.q1_e,
+                median: item.median_e,
+                q3: item.q3_e,
+                high: item.max_e
+            });
+
+            performanceData.push({
+                x: 0.85,  // Specify the x value for the boxplot
+                low: item.min_p,
+                q1: item.q1_p,
+                median: item.median_p,
+                q3: item.q3_p,
+                high: item.max_p
+            });
+        }
+    }
+    // Process student data for the current week
+    if (studentData.length > 0) {
+        let studentItem = studentData.find(data => data.weeks == currentWeek);
+        if (studentItem) {
+            let studentP = studentItem.p;  // Student performance for current week
+            let studentE = studentItem.e;  // Student attendance for current week
+            // Add scatter data for the student's performance and attendance
+            scatterDataE.push({
+                x: 0,  // For the current week (index 0)
+                y: studentE
+            });
+
+            scatterDataP.push({
+                x: categories.length - 1,  // For the current week (index 0)
+                y: studentP
+            });
+        }
+    }
+
+    const studentName = localStorage.getItem('stu_name');
+    // Combined Chart
+    Highcharts.chart('container-classVSstudent', {
+        chart: {
+            type: 'boxplot'
+        },
+        title: {
+            text: `${studentName}與班級的比較`
+        },
+        xAxis: {
+            categories: categories,
+            title: {
+                text: '指標'
+            }
+        },
+        yAxis: {
+            title: {
+                text: '值'
+            },
+            min: 0,
+            max: 1
+        },
+        series: [
+            {
+                name: '班級出席率',
+                type: 'boxplot',
+                data: attendanceData,
+                color: 'blue',
+                tooltip: {
+                    headerFormat: '<em>指標 {point.key}</em><br/>'
+                },
+                xAxis: 0
+            },
+            {
+                name: '學生出席率',
+                type: 'scatter',
+                data: scatterDataE,
+                marker: {
+                    fillColor: 'blue',
+                    lineWidth: 2,
+                    lineColor: 'black'
+                },
+                tooltip: {
+                    pointFormat: '學生出席率: {point.y}'
+                }
+            },
+            {
+                name: '班級成績',
+                type: 'boxplot',
+                data: performanceData,
+                color: 'red',
+                tooltip: {
+                    headerFormat: '<em>指標 {point.key}</em><br/>'
+                },
+                xAxis: 0 
+            },
+            {
+                name: '學生成績',
+                type: 'scatter',
+                data: scatterDataP,
+                marker: {
+                    fillColor: 'red',
+                    lineWidth: 2,
+                    lineColor: 'black'
+                },
+                tooltip: {
+                    pointFormat: '學生成績: {point.y}'
+                }
+            }
+        ]
+    });
+}
+
+
+// ------------------------------------------------------------------
+
+
+$(document).ready(function() {
+    const instructor_id = window.localStorage.getItem("instructor_id") || 153608; // 你的 instructorId
+    $.ajax({
+        url: __local_API_ADDR + '/get_classes_by_instructor?instructor_id=' + instructorId,
+        type: 'GET',
+        success: function(response) {
+            const classes = response;
+
+            if (Array.isArray(classes)) {
+                const departments = {};
+
+                classes.forEach(function(item) {
+                    const { department_name, course_code_abbr, grade, class: className } = item;
+
+                    if (!departments[department_name]) {
+                        departments[department_name] = { course_code_abbr: course_code_abbr, grades: {} };
+                    }
+
+                    if (!departments[department_name].grades[grade]) {
+                        departments[department_name].grades[grade] = [];
+                    }
+
+                    departments[department_name].grades[grade].push(className);
+                });
+
+                Object.keys(departments).forEach(department => {
+                    const deptId = department.replace(/\s+/g, '_'); // 用於生成唯一ID
+                    const deptDiv = $('<li class="nav-item" style="visibility: visible;">');
+
+                    const deptHeader = $('<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse_' + deptId + '" aria-expanded="false" aria-controls="collapse_' + deptId + '">')
+                        .append($('<i class="fas fa-fw fa-folder"></i>'))
+                        .append($('<span>').text(department))
+                        .on('click', function() {
+                            const course_code_abbr = departments[department].course_code_abbr; // 點擊系別，篩選 department_id
+                            //filterTableByDepartment(course_code_abbr); // 調用篩選函數
+                            clearFilters();
+                            currentFilters.department = course_code_abbr;
+                            filterTable();
+
+
+                        });
+
+                    const collapseDiv = $('<div class="collapse" id="collapse_' + deptId + '" aria-labelledby="headingPages" data-parent="#accordionSidebar">')
+                        .append($('<div class="bg-white py-2 collapse-inner rounded">'));
+
+                    // 定義中文年級的排序
+                    const gradeOrder = {
+                        '一': 1,
+                        '二': 2,
+                        '三': 3,
+                        '四': 4,
+                    };
+
+                    // 先按照年級排序
+                    const sortedGrades = Object.keys(departments[department].grades).sort((a, b) => {
+                        return (gradeOrder[a] || 0) - (gradeOrder[b] || 0);
+                    });
+
+                    sortedGrades.forEach(grade => {
+                        const gradeId = grade.replace(/\s+/g, '_'); // 用於生成年級的唯一ID
+                        const gradeHeader = $('<a class="collapse-item collapsed" href="#" data-toggle="collapse" data-target="#collapse_' + deptId + '_' + gradeId + '" aria-expanded="false" aria-controls="collapse_' + deptId + '_' + gradeId + '">')
+                            .text(`${grade}年級:`);
+
+                        const gradeCollapseDiv = $('<div class="collapse" id="collapse_' + deptId + '_' + gradeId + '" aria-labelledby="headingPages" data-parent="#collapse_' + deptId + '">')
+                            .append($('<div class="bg-white py-2 collapse-inner rounded">'));
+                        departments[department].grades[grade].forEach(className => {
+                            if (className.trim()) { // 確保班級名稱不是空的
+                                const classLink = $('<div style="padding-left: 20px; cursor: pointer;">')
+                                    .text(`${className}`)
+                                    .on('click', function() {
+                                        shortDepartment = department.substring(0, 2);
+                                        const classPrefix = className.substring(0, 2); // 取得前兩個字
+                                        const grade = className.substring(2); // 取得年級部分
+                                        const fullname = (classPrefix === "進學") ? `${shortDepartment}${classPrefix}班${grade}` : `${shortDepartment}${className}`;
+                                        clearFilters();
+                                        currentFilters.class = fullname;
+                                        filterTable();
+                                        //filterTableByClass(department.substring(0, 2), className); // 篩選班級的函數
+                                    });
+                                gradeCollapseDiv.children().append(classLink);
+                            }
+                        });
+                        gradeHeader.on('click', function() {
+                            const gradeMapping = {
+                                '一': '1',
+                                '二': '2',
+                                '三': '3',
+                                '四': '4',
+                                '五': '5'
+                            };
+                            clearFilters();
+                            currentFilters.grade = gradeMapping[grade];
+                            currentFilters.department = departments[department].course_code_abbr;
+                            filterTable();
+                            //filterTableByGrade(grade,course_code_abbr); // 根據年級進行篩選
+                        });
+                        collapseDiv.children().append(gradeHeader).append(gradeCollapseDiv);
+                    });
+
+                    deptDiv.append(deptHeader).append(collapseDiv);
+                    $('#class_sidebar').append(deptDiv);
+                });
+                $('#accordionSidebar').append('<hr class="sidebar-divider">');
+                $('#accordionSidebar').append(`
+                    <div class="text-center d-none d-md-inline">
+                        <button class="rounded-circle border-0" id="sidebarToggle" type="button" aria-label="Toggle sidebar"></button>
+                    </div>
+                `);
+                
+                // 綁定 sidebarToggle 按鈕的點擊事件
+                $('#sidebarToggle').on('click', function() {
+                    $('#accordionSidebar').toggleClass('toggled'); // 確保你有定義好這個 class
+                });
+            } else {
+                console.error("返回的類別不是陣列:", classes);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("API 錯誤:", error);
+        }
+    });
+});
+
+// 篩選表格的函數
+function filterTableByClass(shortDepartment,className) {
+    
+    const classPrefix = className.substring(0, 2); // 取得前兩個字
+    const grade = className.substring(2); // 取得年級部分
+
+
+    // 檢查前兩個字是否為 "進學"
+    const fullname = (classPrefix === "進學") ? `${shortDepartment}${classPrefix}班${grade}` : `${shortDepartment}${className}`;
+    console.log("篩選班級:", fullname);
+
+    $('#tbl_course_list tr').each(function() {
+        const rowClass = $(this).find('th').eq(2).text(); // 假設班級在第三列
+        if (fullname === rowClass || $(this).find('th').eq(2).text() === '學生班級') {
+            $(this).show(); // 顯示匹配的行
+        } else {
+            $(this).hide(); // 隱藏不匹配的行
+        }
+    });
+    clearFilters();
+    currentFilters.class = fullname;
+    filterTable();
+
+
+}
+
+
+function filterTableByDepartment(courseCode) {
+
+    // 篩選表格中的行，根據隱藏的課程代碼列進行匹配
+    $('#tbl_course_list tr').each(function() {
+        
+        if ($(this).find('input, select').length > 0) {
+            return; // 忽略包含 input 或 select 的行
+        }
+        console.log("課程代碼:", courseCode);
+        var course_code_abbr = $(this).find('th').eq(7).text().trim();        
+        // 第8列是隱藏的課程代碼
+        if (course_code_abbr.substring(0, 5) === courseCode.substring(0, 5)) { // 比較前五碼
+            $(this).show();  // 顯示匹配的行
+        } else {
+            $(this).hide();  // 隱藏不匹配的行
+        }
+    });
+
+}
+
+
+
+function filterTableByGrade(grade,courseCode) {
+    console.log("篩選年級:", grade);
+    // 篩選表格中的行，根據隱藏的課程代碼列進行匹配
+    $('#tbl_course_list tr').each(function() {
+        if ($(this).find('input, select').length > 0) {
+            return; // 跳過表格中的輸入和選擇
+        }
+        
+        var course_code_abbr = $(this).find('th').eq(7).text(); // 第8列是隱藏的課程代碼
+        var lastChar = course_code_abbr.charAt(5); // 取課程代碼的最後一個字符
+        console.log("最後一個字符:", lastChar);
+        
+        // 這裡的條件根據你的年級設定來判斷
+
+        if (lastChar === '1' && grade === '一' && course_code_abbr.substring(0, 5) === courseCode.substring(0, 5)) {
+            $(this).show();
+        } else if (lastChar === '2' && grade === '二' && course_code_abbr.substring(0, 5) === courseCode.substring(0, 5)) {
+            $(this).show();
+        } else if (lastChar === '3' && grade === '三'&& course_code_abbr.substring(0, 5) === courseCode.substring(0, 5)) {
+            $(this).show();
+        } else if (lastChar === '4' && grade === '四'&& course_code_abbr.substring(0, 5) === courseCode.substring(0, 5)) {
+            $(this).show();
+        } else if(lastChar === '5' && grade === '五'&& course_code_abbr.substring(0, 5) === courseCode.substring(0, 5)) {
+            $(this).show();
+        }else {
+        $(this).hide();
+        }
+    });
+
+}
+
+
+// ------------------------------------------------------------------
+
+var p1p2p3 = {
+    p1:false,
+    p2:false,
+    p3:false
+};
+$(document).ready(function() {
+
+    // 篩選 p1
+    $('#filterP1').on('click', function() {
+        p1p2p3.p1 = !p1p2p3.p1; // 切換 p1 篩選狀態
+        filterTable(); // 重新篩選表格
+    });
+
+    // 篩選 p2
+    $('#filterP2').on('click', function() {
+        p1p2p3.p2 = !p1p2p3.p2; // 切換 p2 篩選狀態
+        filterTable(); // 重新篩選表格
+    });
+
+    // 篩選 p3
+    $('#filterP3').on('click', function() {
+        p1p2p3.p3 = !p1p2p3.p3; // 切換 p3 篩選狀態
+        filterTable(); // 重新篩選表格
+    });
+
+    $('#resetFilter').on('click', function() {
+        $('#tbl_course_list tr').show(); // 顯示所有行
+    });
+});
+
+var currentFilters = {
+    class: null,
+    grade: null,
+    department: null
+};
+function clearFilters() {
+    currentFilters.class = null;
+    currentFilters.grade = null;
+    currentFilters.department = null; // 重新呼叫篩選函數
+}
+
+function filterTable() {
+    var search = $('#name-search').val();
+    var filter = $('#identity-filter').val();
+    var attendanceSort = $('#attendance-filter').val();
+    var performanceSort = $('#performance-filter').val();
+    var found = false;
+
+    var rows = $('#tbl_course_list tr').not(':first').detach();
+
+    rows.sort(function(a, b) {
+        var attendanceA = parseFloat($(a).find('th').eq(4).find('span').text());
+        var attendanceB = parseFloat($(b).find('th').eq(4).find('span').text());
+
+        if (attendanceSort === 'asc') {
+            return attendanceA - attendanceB;
+        } else if (attendanceSort === 'desc') {
+            return attendanceB - attendanceA;
+        } else {
+            return 0;
+        }
+    });
+
+    $.each(rows, function(index, row) {
+        $('#tbl_course_list').append(row);
+    });
+
+    $('#tbl_course_list tr').each(function() {
+        if ($(this).find('input, select').length > 0) {
+            return; // 跳過輸入和選擇行
+        }
+
+        var name = $(this).find('th').eq(1).text();
+        var courseClass = $(this).find('th').eq(2).text();
+        var identity = $(this).find('th').eq(3).text();
+        var courseCode = $(this).find('th').eq(7).text();
+        var courseGrade = $(this).find('th').eq(7).text().charAt(5); // 獲取隱藏的課程代碼列
+
+        // 取得 p1, p2, p3 的值
+        var p1Num = parseInt($(this).find('th').eq(8).text()); // 假設第 10 列是 p1_num
+        var p2Num = parseInt($(this).find('th').eq(9).text()); // 假設第 11 列是 p2_num
+        var p3Num = parseInt($(this).find('th').eq(10).text()); // 假設第 12 列是 p3_num
+
+        // 根據篩選條件進行篩選
+        let showRow = true;
+
+        // P1, P2, P3 篩選邏輯
+        if (p1p2p3.p1 && p1Num === 0) {
+            showRow = false; // p1 需要篩選，但 p1Num 是 0
+        }
+        if (p1p2p3.p2 && p2Num === 0) {
+            showRow = false; // p2 需要篩選，但 p2Num 是 0
+        }
+        if (p1p2p3.p3 && p3Num === 0) {
+            showRow = false; // p3 需要篩選，但 p3Num 是 0
+        }
+
+        // 其他篩選條件
+        if (name.indexOf(search) > -1 && 
+            (filter === '' || identity.indexOf(filter) > -1) &&
+            (currentFilters.class === null || courseClass === currentFilters.class) &&
+            (currentFilters.grade === null || (currentFilters.grade && currentFilters.department.substring(0, 5) === courseCode.substring(0, 5) && courseGrade === currentFilters.grade)) &&
+            (currentFilters.department === null || currentFilters.department.substring(0, 5) === courseCode.substring(0, 5))) {
+            
+            // 如果符合所有條件，顯示行
+            if (showRow) {
+                $(this).show();
+                found = true; // 設置找到標記
+            } else {
+                $(this).hide(); // 隱藏不符合的行
+            }
+        } else {
+            $(this).hide(); // 隱藏不符合的行
+        }
+    });
+}
+
+
+</script>
+
+
+</html>

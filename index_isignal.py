@@ -111,7 +111,9 @@ def letter_p3():
 def P_mods():
     return render_template('P_mods.html')
 
-
+@app.route("/charts_instructor", methods=['GET', 'POST']) 
+def charts_compare():
+    return render_template('charts_instructor.html')
 
 @app.route("/charts_detail", methods=['GET', 'POST'])
 def charts_detail():
