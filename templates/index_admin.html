@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="utf-8">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>PED學習分析系統-iSignal</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="../6869/static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="../6869/static/css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <div class="sidebar-brand-icon rotate-n-15"></div>
+            <div style="padding:0.7rem 0 0.2rem 0; text-align:center;"><img src="static/img/logoTKU.png" width="80" height="80" alt="TKU淡江大學"></div>
+          
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+            
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading --><!-- Nav Item - Pages Collapse Menu --><!-- Nav Item - Utilities Collapse Menu --><!-- Divider --><!-- Heading -->
+            <div style="color:#FFF; padding:0 0.5rem 0.7rem 1.5rem; "><li id="fp">Performance</li>
+                <li id="fp">Engagement</li>
+                <li id="fp">Diagram</li>
+            </div>
+            <hr class="sidebar-divider"><p style="text-align:center; color:rgba(255,255,255,0.6); letter-spacing:0.5rem;">System</p>
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbarIndex mb-4 static-top shadow">
+                    <div class="col-lg-12" style="float:left;">
+                        <div class="col-lg-10" style="float:left; ">
+                        <img src="static/img/logoPEDsystemW.png" width="210" height="60" alt="學習成效及參與評估系統">
+                        </div>
+                        <div class="col-lg-2" style="float:right; text-align:right;">
+                            <ul id="pageBtnS"><li><a onclick="logout()" href="logout">登出Logout</a></li></ul>
+                        </div>
+                    </div>
+                </nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <!-- Content Row -->
+                        <div class="row">
+                            <div class="container px-4 px-lg-5 my-5">
+                                <div class="row gx-4 gx-lg-5 align-items-center">
+                                    <div class="col-md-6">
+                                        <img  class="card-img-top mb-5 mb-md-0" src="static/img/slide/3i3D.png" width="510" height="600" alt="淡江3i+3D">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h1 class="display-5 fw-bolder " id='show_teach_name'>Welcome iSignal member！ </h1>                        
+                                        <div class=" text-break" style="padding:5% 0;">
+                                            <span class="lead ">Smart PASS(Planning and Advising for Student Success)</br>學習分析系統(PED)</span>
+                                            <hr>
+                                            <span class="text-monospace">學習分析系統 (Performance and Engagement Diagram)</br>
+                                                蒐集、分析iClass平台上大量的學習活動數據，</br>
+                                                予以max-min數值正規化，將數據等比例縮放到0~1的區間中，</br>
+                                                並以視覺化方式呈現。</br>
+                                                為方便同學逐週觀察學習樣態，掌握自己的學習狀況供同學參考，</br>
+                                                系統逐週統計前週之數據，並依配分權重更新相關圖表。</br>
+                                                本系統不顯示完全沒有任何參與度或活動成績紀錄的課程。</span>
+                                            </br>
+                                            </br>
+                                            </br>
+                        
+                                        <!--<input type="button" id="submit" value="送出">-->
+                                        </div>
+                                        <form method = "post" id="myform">
+                                            <div class="form-group">
+                                                <label style="color:blue;">帳號:
+                                                    <input id='input_id' type="text" name='account' maxlength=10 size=9 value={{student_id}}>
+                                                </label>
+                                                <p>請輸入6位數字教師帳號，或9位數字學生帳號</p>
+                                                <button type="submit" class="btn btn-primary btn-user btn-block circle">進入系統</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; 淡江大學　資訊處遠距教學發展中心</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="static/vendor/jquery/jquery.min.js"></script>
+    <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="static/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="static/js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="static/vendor/chart.js/Chart.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="static/js/demo/chart-area-demo.js"></script>
+    <script src="static/js/demo/chart-pie-demo.js"></script>
+    <script src="static/js/demo/chart-bar-demo.js"></script>
+
+</body>
+<script type="text/javascript">
+
+$('input').focus(); //set cursor
+
+//停用重新填入確認視窗
+if ( window.history.replaceState ) { 
+    window.history.replaceState( null, null, window.location.href ); 
+}
+
+$("form").submit(function(event){
+    // Stop form from submitting normally
+    event.preventDefault();
+    var account = document.getElementById('input_id').value;
+    if(account === '888888'){
+      location.href = "charts_ewant";
+    }else if(account.length === 6){
+      localStorage.setItem("teacher_id", account);
+      location.href = "charts";
+    }else if(account.length === 9){
+      localStorage.setItem("student_id", account);
+      location.href = "charts_stu";
+    }
+})
+function logout(){
+    windows.localStorage.clear();
+}
+/*
+function nextpage(){
+  var account = document.getElementById('input_id').value;
+  if(account === '888888'){
+    location.href = "charts_ewant";
+  }else if(account.length === 6){
+    //localStorage.setItem("teacher_id", account);
+    location.href = "charts";
+  }else if(account.length === 9){
+    localStorage.setItem("student_id", account);
+    //location.href = "charts_stu";
+  }
+}
+*/
+
+/*
+// Attach a submit handler to the form
+  $( "#form" ).submit(function( event ) {
+    // Stop form from submitting normally
+    event.preventDefault();
+
+    // Get some values from elements on the page:
+    var $form = $( this ),
+        exp = $form.find( "input[name='experience']" ).val(),
+        url = $form.attr( "action" );
+
+    // Send the data using post
+    var posting = $.post({
+      url: url,
+      data: { experience: exp } );
+      success: function( data ) {
+        window.location='next.html';
+      }
+    });
+  });
+*/
+
+</script>
+</html>

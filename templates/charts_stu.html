@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>PED學習分析系統 - 學生版</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="../6869/static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="../6869/static/css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top" class="sidebar-toggled">
+<div class="modal">請稍候...</div>
+<!--<div style="width:100%; clear:both;"> 00</div>-->
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <!--<button class="rounded-circle border-0" id="sidebarToggle"></button>-->
+            </div>
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <div class="col-lg-12" style="float:left;">
+                        <div class=" col-lg-9" style="float:left;">
+                            <img src="static/img/logoPEDsystem.png" width="350" height="85" alt="學習成效及參與評估系統">
+                        </div>
+                        <div class="col-lg-3" style="float:left;">
+                            <ul id="pageBtnS">
+                                <li style="float: right;"><a href="javascript:pageback()" title="回到系統首頁">Home</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="h4 mb-2 text-gray-800 pa-left" id='student_name'></div>
+                    <h1 class="h4 mb-2 text-gray-800 pa-left" id='label_course_name'>本學期修課學習表現：</h1>
+                    <p class="mb-4 pa-left" id='label_course_class'></p>
+                    <p class="mb-4 pa-left" id='label_course_enrolled'></p>                    
+
+                    <!-- Content Row -->
+                    <div class="row">
+
+                        <div class="col-xl-8 col-lg-7">
+
+                            <!-- Area Chart -->
+                            <div class="card shadow mb-4">
+                                <table id="tbl_course_list" height="600">
+                                  <colgroup span="4"></colgroup>
+                                  <tr>
+                                    <th>課程名稱</th>
+                                    <th>課程代碼</th>
+                                    <th>警示燈號</th>
+                                    <th>學習表現</th>
+                                    <th>參與度</th>
+                                  </tr>
+                                </table>
+                            </div>
+                            
+                            <!-- Scatter Chart -->
+                            <div class="card shadow mb-4">
+                                    <ul class="tabs_pe" style="height: 50px">
+                                        <label  class="active" style="width: 35%; height: 50px;"><a href="#tab01" style="display:inline-block;width: 100%;height:80%;line-height: 30px;text-align: center;margin: 4% 0 0 5%;border-radius: 25px;border:2px solid #ccc;position:relative;">你的表現與分布圖</a></label >
+                                        <label style="width: 35%; height: 50px;"><a href="#tab02" style="display:inline-block;width: 100%;height:80%;line-height: 30px;text-align: center;margin: 4% 0 0 10%;border-radius: 25px;border:2px solid #ccc;position:relative;">你的表現與班平均比較</a></label >
+                                    </ul>
+                                
+                            
+                                <div id="tab01" class="tab-inner">
+                                    <h6 class="m-0 font-weight-bold text-primary"></p>於本課程中相對於所有修課同學的表現(紅點)</h6>
+                                    <div id="container-pe-course"></div>
+                                </div>
+                                <div id="tab02" class="tab-inner">
+                                    <h6 class="m-0 font-weight-bold text-primary"></p>每周的表現與班平均</h6>
+                                    <div id="container-pe-avg"></div>
+                                </div>
+                                
+                            </div>
+                            performance: 作業、測驗、問卷、點名及討論累計分數相較全班之表現, 
+                            </br> engagement: 點名、作業及測驗繳交累計次數相較全班之表現
+                            </br>更新至第18週 : 2024.07.7
+                        </div>
+
+                        <!-- Donut Chart -->
+                        <div class="col-xl-4 col-lg-5">
+                            <div class="card shadow mb-4">
+                                <!-- Card Header - Dropdown -->
+                                <div class="card-header py-3">
+                                  <h6 class="m-0 font-weight-bold text-primary">本學期所修課程警示燈號分佈概況</h6>
+                                  <div id="divSemiCirclePieChart"></canvas>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; 淡江大學　資訊處遠距教學發展中心</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="/login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="static/vendor/jquery/jquery.min.js"></script>
+    <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="static/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="static/js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="static/vendor/chart.js/Chart.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="static/js/demo/chart-area-demo.js"></script>
+    <script src="static/js/demo/chart-pie-demo.js"></script>
+    <script src="static/js/demo/chart-bar-demo.js"></script>
+
+</body>
+<style>
+/* Start by setting display:none to make this hidden.
+   Then we position it in relation to the viewport window
+   with position:fixed. Width, height, top and left speak
+   for themselves. Background we set to 80% white with
+   our animation centered, and no-repeating */
+.modal {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 ) 
+                url('http://i.stack.imgur.com/FhHRx.gif') 
+                50% 50% 
+                no-repeat;
+}
+
+/* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+body.loading .modal {
+    overflow: hidden;   
+}
+
+/* Anytime the body has the loading class, our
+   modal element will be visible */
+body.loading .modal {
+    display: block;
+}
+
+#divSemiCirclePieChart {
+    height: 400px;
+}
+
+.highcharts-data-table table {
+    font-family: Verdana, sans-serif;
+    border-collapse: collapse;
+    border: 1px solid #ebebeb;
+    margin: 10px auto;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+.highcharts-data-table caption {
+    padding: 1em 0;
+    font-size: 1.2em;
+    color: #555;
+}
+
+.highcharts-data-table tr:hover {
+    background: #f1f7ff;
+}
+</style>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script>
+//__local_API_ADDR='http://20.212.230.118:7071/';
+//__local_API_ADDR='https://bida.ipc.tku.edu.tw/pedev/7071/';
+__local_API_ADDR='https://sso.tku.edu.tw/oisbida/pedev/7071/';
+pe_series = [];
+course_name = '';
+
+_maxWeek=18;
+_currentWeek=18;
+_currentCategories= [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18];
+_traverseWeek=_currentWeek;
+
+p_thres=e_thres=0.6;
+_last_pt_color='';
+
+var scatter_color = {
+    "0": 'rgba(97, 172, 214, .5)',
+    "+1": 'rgba(126, 216, 147, .5)',
+    "+2": 'rgba(42, 176, 73, .5)',
+    "-1": 'rgba(231, 131, 133, .5)',
+    "-2": 'rgba(176, 42, 44, .5)',
+}
+
+course_data = []
+
+$body = $("body");
+
+$(document).on({
+    ajaxStart: function() { $body.addClass("loading");    },
+     ajaxStop: function() { $body.removeClass("loading"); }    
+});
+
+$(document).ready(function(){     
+   
+    input_studentId();
+    
+});
+
+$(function(){
+    var $li = $('ul.tabs_pe label');
+        $($li. eq(0) .addClass('active').find('a').attr('href')).siblings('.tab-inner').hide();
+    
+        $li.click(function(){
+            $($(this).find('a'). attr ('href')).show().siblings ('.tab-inner').hide();
+            $(this).addClass('active'). siblings ('.active').removeClass('active');
+        });
+});
+
+roundDown = function( num, decimal ) { 
+    return Math.floor( ( num + Number.EPSILON ) * Math.pow( 10, decimal ) ) / Math.pow( 10, decimal );
+}
+
+
+function input_studentId(){//and student name
+    var account = '{{account}}';
+    s_id = window.localStorage.getItem("student_id") || account;
+    //alert(s_id)
+    
+    __1st_course_id='';
+    
+    url_text = __local_API_ADDR + 'get_student_name?student_id='+s_id
+    
+    $.ajax({
+        url : url_text,
+        type : "GET",
+        success : function(data) {
+            document.getElementById('student_name').textContent = data + "同學";
+        }
+    });
+    
+    url_text = __local_API_ADDR + "get_course_list_detail?id="+s_id;
+    //alert(url_text)
+    
+    this.user_code = s_id;
+    
+    $.ajax({
+        url: url_text,
+        type: "GET"
+    }).error( function(request, error) {
+        alert("Error course is NULL: "+ s_id +request.responseText+" has no course");    
+    }).success( function(getCourseData) {
+    
+
+    
+        if (getCourseData == JSON.stringify({})) {
+            alert("並無任何與參與度或活動成績有關之iClass課程紀錄！");
+            $body.removeClass("loading");
+            //location.href = "index";
+            pageback();
+            return;
+        }
+        
+        course_list = JSON.parse(getCourseData);
+        
+        //alert(course_list);
+        
+        var table = $('#tbl_course_list');
+        table.empty(); 
+        
+        _r=0;
+        _y=0;
+        _g=0;
+        _b=0;
+        
+        if (course_list.length!=0){
+        
+            __1st_course_id = course_list[0].course_id;
+    
+            var container_1 = $('#divCourseContainer_current');
+            container_1.empty();      
+            
+            var row = '<tr>' + 
+                '<th>課程代碼</th>' +
+                '<th>課程名稱</th>' +
+                '<th>警示燈號</th>' +
+                '<th>學習表現</th>' +
+                '<th>參與度</th>' +
+            '</tr>';
+            
+            table.append(row);
+            
+            // set id as course_code
+            for (let cl of course_list) {
+                let course_code = cl.code;
+                let course_name = cl.name;
+                let _weeks = cl.weeks;            
+                let _p = cl.p;            
+                let _e = cl.e;            
+                let color = cl.color;     
+                let course_id = cl.course_id;   
+                /*
+                if (_p==0){
+                   if (_e==0){
+                       continue;
+                   }
+                }*/
+                
+                var br = document.createElement('br');
+    
+                var a = document.createElement('a');
+                var linkText = document.createTextNode(course_name + course_code );
+                a.appendChild(linkText);
+                a.title = course_name + course_code ;
+                a.href="javascript:redraw_chart(" + course_code.substring(11) + ",1121)";
+                
+                container_1.append(a);                
+                container_1.append(br);       
+                
+                if (color=='b') {
+                    _g +=1;
+                    src = '<img src="static/img/blue.png" width="16" height="16">'
+                }
+                else if (color=='g') {
+                    _g +=1;
+                    src = '<img src="static/img/green.png" width="16" height="16">'
+                }
+                else if (color=='y') {
+                    _y +=1;
+                    src = '<img src="static/img/yellow.png" width="16" height="16">'
+                }
+                else {
+                    _r +=1; 
+                    src = '<img src="static/img/red.png" width="16" height="16">'
+                }
+                
+                _link = '<a href="javascript:redraw_chart(' +course_id + ',1121)' + '">' + course_code + "</a>"
+
+                var row = '<tr>' + 
+                    '<th>'+_link+'</th>' +
+                    '<th>'+course_name+'</th>' +
+                    '<th>'+src+'</th>' +
+                    '<th>'+roundDown(_p, 2)+'</th>' +
+                    '<th>'+roundDown(_e, 2)+'</th>' +
+                '</tr>';
+                
+                table.append(row);
+            }                 
+            
+            draw_piechart(_r, _y, _g);
+
+            if (__1st_course_id.length!=0){
+                
+                setTimeout( function() { redraw_chart(__1st_course_id, '1121'); }, 300);
+            }
+        }
+    });
+}
+
+function redraw_chart(course_id, semester) {
+
+    //alert(this.user_code);
+
+    var fetchdata_json = new Array();
+    
+    window.course_id = course_id;
+    window.semester = semester;
+    
+    _s_id = this.user_code;
+    
+    if (semester=='1121') {
+        _week=_currentWeek;
+    }
+    else {
+        _week=18;
+    }
+    
+    $.ajax({            
+        url: __local_API_ADDR + "get_pe_data?course_id="+course_id+"&week="+_week,
+        type: "GET"
+    }).success( function(getData) {
+        course_name = '';
+        week_list = JSON.parse(getData);
+        
+        if (JSON.stringify(week_list) == '{}'){
+            alert('您點選的這門課程沒有資料')
+            return;
+        }
+        
+        for (let el of week_list) {
+            week = el.week;
+            course_name = el.course_name;
+            course_code = el.course_code;
+            //console.log(el.data_list);
+            
+            window.course_name = course_name;
+            
+            caption_text = ""
+
+            if (week==_week) {
+                pe_series = [];
+                sid_datalist = [];
+                
+                for(let d of el.data_list) {
+                    if (d.user_code==_s_id){
+                        d.color = '#EA0000';
+                        sid_datalist.push(d);
+                    }
+                    else {
+                        d.color = '#FFD306';
+                    }   
+                }
+                fetchdata_json = el.data_list;                 
+                var feed = {name: course_name + course_code, data: fetchdata_json};
+                var feed2 = {name: course_name + course_code, data :sid_datalist, zIndex: 99};
+                pe_series.push(feed);
+                pe_series.push(feed2);
+                //console.log(pe_series);
+            }
+        } 
+        
+        Highcharts.chart('container-pe-course', {
+            chart: {
+                type: 'scatter',
+                zoomType: 'xy'
+            },
+            title: {
+                text: course_name
+            },
+            xAxis: {
+                title: {
+                    enabled: true,
+                    text: 'Performance'
+                },
+                max: 1,
+                min: 0,
+                plotLines: [{
+                    color: 'black',
+                    dashStyle: 'dot',
+                    width: 2,
+                    value: p_thres,
+                    zIndex: 10
+                }],
+                plotBands: [{
+                    from: 0,
+                    to: p_thres-0.1
+                },{
+                    from: p_thres-0.1,
+                    to: p_thres+0.1
+                },{
+                    from: p_thres+0.1,
+                    to: 1
+                }                
+                ],
+                gridLineColor: 'transparent'
+            },
+            yAxis: {
+                title: {
+                    text: 'Engagement'
+                },
+                max: 1,
+                min: 0,
+                plotLines: [{
+                    color: 'black',
+                    dashStyle: 'dot',
+                    width: 2,
+                    value: e_thres,
+                    zIndex: 10
+                }],
+                gridLineColor: 'transparent'
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'left',
+                verticalAlign: 'top',
+                x: 100,
+                y: 70,
+                floating: true,
+                backgroundColor: Highcharts.defaultOptions.chart.backgroundColor,
+                borderWidth: 1,
+                enabled: false
+            },
+            plotOptions: {
+                scatter: {
+                    allowPointSelect: true,
+                    marker: {
+                        radius: 5,
+                        states: {
+                            hover: {
+                                enabled: true,
+                                lineColor: 'rgb(100,100,100)'
+                            }
+                        }
+                    },
+                    states: {
+                        hover: {
+                            marker: {
+                                enabled: false
+                            }
+                        }
+                    },
+                    tooltip: {
+                        pointFormat: '-> P: {point.x} , E: {point.y} ' //'{point.user_code} -> P: {point.x} , E: {point.y} '
+                    },
+                }
+            },        
+            series: pe_series,
+            exporting :{
+                filename :'stu_point_chart'
+            }
+        });  
+        
+        setTimeout( function() { draw_avg_pe(course_id)}, 300);
+    });
+    
+    
+}
+
+function draw_piechart(_sr, _sy, _sg){
+
+    //alert(_sr);
+    //alert(_sy);
+    //alert(_sg);
+    
+    var colors = ['#E60965', '#FD8C04', '#9FE6A0' ];
+
+    Highcharts.chart('divSemiCirclePieChart', {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: 0,
+            plotShadow: false
+        },
+        title: {
+            text: '課程數及比例',
+            align: 'center',
+            verticalAlign: 'middle',
+            y: 60
+        },
+        tooltip: {
+            pointFormat: '課程數: {point.y} <b>比例:{point.percentage:.1f}%</b>'
+        },
+        accessibility: {
+            point: {
+                valueSuffix: '%'
+            }
+        },
+        plotOptions: {
+            pie: {
+                dataLabels: {
+                    enabled: true,
+                    distance: -50,
+                    style: {
+                        fontWeight: 'bold',
+                        color: 'white'
+                    }
+                },
+                startAngle: -90,
+                endAngle: 90,
+                center: ['50%', '75%'],
+                size: '110%'
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: '課程數',
+            innerSize: '50%',
+            data: [{
+                name : '紅區' + _sr + " 門",
+                y : _sr,
+                color: colors[0]
+            },
+            {
+                name : '黃區' + _sy + " 門",
+                y : _sy,
+                color: colors[1]            
+            },
+            {
+                name : '綠區:' + _sg + " 門",
+                y : _sg,
+                color: colors[2]    
+            }]
+        }],
+        exporting :{
+            filename :'stu_pie_chart'
+        }
+    });
+}
+
+
+function draw_avg_pe(course_id){
+
+    if ($.active >0) {
+        alert('尚有未處理完的資料請求(AVG)，請稍候。');
+        return;
+    }
+    
+    s_id = this.user_code;
+    
+    _url = __local_API_ADDR + "get_avg_pe?course_id="+course_id+"&student_id="+s_id+"&semester="+semester;
+    //alert(_url);
+    
+    //alert(semester);
+    
+    $.ajax({
+        url: _url,
+        type: "GET"
+    }).success( function(getData) {
+        //alert("ajax succes");
+        //alert(getdata);
+        
+        data_list = JSON.parse(getData);
+        //alert(data_list);
+        
+        series_p = [];
+        series_e = [];
+        avg_p = [];
+        avg_e = [];
+
+        _categories = []
+
+        if (window.semester=='1121'){
+            _categories= _currentCategories;
+            _week = _currentWeek;
+            
+        }else{
+            _categories= [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18];
+            _week =18;
+        }
+        
+        for (let el of data_list) {
+            if (el.weeks<=_week) {
+                avgp = parseFloat(el.avg_p);
+                avge = parseFloat(el.avg_e);
+                p = parseFloat(el.p);
+                e = parseFloat(el.e);
+                //alert(p);
+                avg_p.push(avgp);
+                avg_e.push(avge);
+                series_p.push(p);
+                series_e.push(e);
+            }
+        }
+                
+        Highcharts.chart('container-pe-avg', {
+          chart: {
+            zoomType: 'xy'
+          },
+          title: {
+            text: window.course_name
+          },
+          xAxis: {
+            categories: _categories,
+            crosshair: true,
+            title: {
+              text: 'Weeks'
+            }
+          },
+          yAxis:{
+            min: 0,
+            max: 1,
+            title: {
+              text: 'Engagement and Performance'
+            }
+          },
+          tooltip: {
+            headerFormat: '<span style="font-size:14px">week:{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+              '<td style="padding:0"><b>{point.y:.2f} </b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+          },
+          plotOptions: {
+            column: {
+              pointPadding: 0.2,
+              borderWidth: 0
+            },
+          },
+          series: [{
+            name: '班平均-P',
+            data: avg_p,
+            type: 'column'
+          }, {
+            name: '班平均-E',
+            data: avg_e,
+            type: 'column',
+            color: "gray"
+          },{
+            name: '個人-P',
+            data: series_p,
+            color: "orange"
+          },{
+            name: '個人-E',
+            data: series_e,
+            color: "lime"
+          }],
+          exporting: {
+            filename: 'stu_semester_avg_chart'
+          }
+        });
+    })
+}
+
+function pageback(){
+    //console.log(document.referrer);
+    if(document.referrer === 'https://sso.tku.edu.tw/oisbida/pedev/6869/charts'){
+        //console.log("test1");
+        window.close();
+    }else{
+        //console.log("test2");
+        window.history.back();
+    }
+}
+
+</script>
+</html>
