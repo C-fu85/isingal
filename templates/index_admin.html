@@ -104,6 +104,15 @@
                                                 <button type="submit" class="btn btn-primary btn-user btn-block circle">進入系統</button>
                                             </div>
                                         </form>
+                                        <form method = "post" id="instructorForm">
+                                            <div class="form-group">
+                                                <label style="color:blue;">教官人員代號:
+                                                    <input id='instructor_id' type="text" name='account' maxlength=10 size=9 value=>
+                                                </label>
+                                                <p>請輸入6位數字教官人員代號</p>
+                                                <button type="submit" class="btn btn-primary btn-user btn-block circle">進入系統</button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -194,6 +203,19 @@ $("form").submit(function(event){
       location.href = "charts_stu";
     }
 })
+document.getElementById('instructorForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // 阻止表單提交
+    var account = document.getElementById('instructor_id').value;
+    var errorMessage = document.getElementById('officer-error-message');
+
+    if (/^\d{6}$/.test(account)) {
+        localStorage.setItem("instructor_id", account);
+        location.href = "charts_instructor";
+    }  else {
+        localStorage.setItem("instructor_id", 153608);
+        location.href = "charts_instructor"; // 顯示錯誤訊息
+    }
+});
 function logout(){
     windows.localStorage.clear();
 }
