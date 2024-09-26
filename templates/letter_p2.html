@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>PED學生預警信發送系統</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="../6869/static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="../6869/static/css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+<div class="modal">請稍候...</div>
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline"></div>
+
+        </ul>
+        <!-- End of Sidebar -->
+        
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Topbar -->
+                <nav class="navbar navbar-light bg-white topbar mb-4 static-top shadow">
+                    <div class="col-lg-12" style="float:left;padding: auto; height:150px;">
+                        <div class=" col-lg-9" style="float:left;">
+                            <img src="static/img/logoPEDsystem.png" width="350" height="85" alt="學習成效及參與評估系統">
+                        </div>
+                        <div class="col-lg-3" style="float:right; width="15%"">
+                            <ul id="pageBtnS">
+                                <!-- Function buttons -->
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <h1 class="h4 mb-2 text-gray-800 pa-left" id='label_course_name'>課程名稱</h1>
+                <p class="mb-4 pa-left" id='label_course_class'></p>
+                <p class="mb-4 pa-left" id='label_course_enrolled'></p>                    
+
+                <!-- Content Row -->
+                <div class="row">
+                    <div class="col-xl-8 col-lg-7">
+                    
+                        <!--  show commment  -->
+                        <div class="card shadow mb-4" style="padding: 20px;">
+                            <div class="card-header py-3">
+                                <h4 class="m-0 font-weight-bold text-primary">設定本週寄送給表現落後同學的勉勵信(測試中)</h4>
+                            </div>
+                            <!-- comment form -->
+                            <form style="padding-left: 50px;">
+                                    <br>
+                                    <!-- p2 -->
+                                    <div class="lettertable">
+                                    
+                                        <br>
+                                        <h5>連續3週位於紅區的學生</h5>
+                                        
+                                        <div id='student_list' >名單 :</div>
+                                        <br>
+                                        
+                                        <!-- switch button 2-->
+                                        <div class="onoffswitch">
+                                            <input type="checkbox" name="switch_p2" class="onoffswitch-checkbox" id="switch_p2" tabindex="0">
+                                            <label class="onoffswitch-label" for="switch_p2">
+                                                <span class="onoffswitch-inner"></span>
+                                                <span class="onoffswitch-switch"></span>
+                                            </label>
+                                        </div>
+                                        
+                                        <!-- letter form 2-->
+                                        <div class="letterform">
+                                            <p>編輯信件內容(也可使用預設內容,上限200字):</p>
+                                            <textarea id="letter_p2" name="letter_p2" cols="20" rows="5" maxlength="200" style="width:60%">
+老師觀察到這最近你不論在出席率和學習表現上都不盡理想，有任何問題歡迎找老師討論，希望你可以勇敢面對問題，
+學校的師長們也都樂意陪著你一起度過難關！誰能期盼人生的過程總是一帆風順，沒有狂瀾巨浪？
+正是因為有了風雨的洗禮才能看見斑斕的彩虹；有了披荊斬棘勇往向前的精神，認真迎向挑戰，才更能體會到成功果實的甘甜。
+永遠不要放棄希望，我們一起加油！
+祝福你健康平安！逆風而上！
+                                            </textarea>
+                                        </div>
+                                        
+                                    </div>
+                                    <br>
+                                    <br>
+                                    
+                            <!-- test send -->
+                            <div class="form-group">
+                                <a onclick="send_form()" class="btn btn-primary btn-user btn-block circle" style="display:float; width: 60%; margin: auto;">儲存變更</a>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; 淡江大學　資訊處遠距教學發展中心</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+
+<!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="static/vendor/jquery/jquery.min.js"></script>
+    <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="static/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="static/js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="static/vendor/chart.js/Chart.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="static/js/demo/chart-area-demo.js"></script>
+    <script src="static/js/demo/chart-pie-demo.js"></script>
+    <script src="static/js/demo/chart-bar-demo.js"></script>
+</body>
+<style>
+/* Start by setting display:none to make this hidden.
+   Then we position it in relation to the viewport window
+   with position:fixed. Width, height, top and left speak
+   for themselves. Background we set to 80% white with
+   our animation centered, and no-repeating */
+.modal {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 ) 
+                url('http://i.stack.imgur.com/FhHRx.gif') 
+                50% 50% 
+                no-repeat;
+}
+
+/* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+body.loading .modal {
+    overflow: hidden;   
+}
+
+/* Anytime the body has the loading class, our
+   modal element will be visible */
+body.loading .modal {
+    display: block;
+}
+
+#divSemiCirclePieChart {
+    height: 400px;
+}
+
+.highcharts-data-table table {
+    font-family: Verdana, sans-serif;
+    border-collapse: collapse;
+    border: 1px solid #ebebeb;
+    margin: 10px auto;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+.highcharts-data-table caption {
+    padding: 1em 0;
+    font-size: 1.2em;
+    color: #555;
+}
+
+.highcharts-data-table tr:hover {
+    background: #f1f7ff;
+}
+</style>
+<script>
+__local_API_ADDR='https://bida.ipc.tku.edu.tw/pedev/7071/';
+
+$body = $("body");
+
+$(document).on({
+    ajaxStart: function() { $body.addClass("loading");    },
+     ajaxStop: function() { $body.removeClass("loading"); }    
+});
+
+$(document).ready(function get_course_datas(){
+    
+    window.course_id = window.localStorage.getItem("course_id") ;
+    //alert(course_id);
+    
+    $.ajax({    
+        url: __local_API_ADDR + "get_letter_data?course_id="+course_id,
+        type: "GET",
+        success : function(getData) {
+            //------  setting course  -------
+            course_name = '';
+            course_code = '';
+            
+            el = JSON.parse(getData)[0];
+            
+            course_name = el.course_name;
+            course_code = el.course_code;
+            
+            document.getElementById('label_course_name').textContent = "課程名稱:  " + course_name;
+            document.getElementById('label_course_class').textContent = "開課系級:  " + course_code.substring(4,9) + " " + course_code.substring(9,10) + "年級 " + "學期序: " + course_code.substring(0,4) + " 班別: " + course_code.substring(17,18);
+            
+            //-------  setting letter -------
+            if(el.p2 == 1){
+                document.getElementById('switch_p2').setAttribute('checked', 'checked');
+            }
+            if(el.p2_c != null){
+                document.getElementById('letter_p2').innerHTML = el.p2_c;
+            }
+            
+        }
+    })
+    $.ajax({    
+        url: __local_API_ADDR + "get_p123_stu?p_mod=p2&course_id="+course_id,
+        type: "GET",
+        dataType: "text",
+        success : function(getData) {
+            stu_list = JSON.parse(getData)
+            
+            for(let i = 0; i < stu_list.length; i++){
+                document.getElementById('student_list').textContent += "  " + stu_list[i];
+            };
+            
+        }
+    })
+});
+$form = $("form");
+function send_form(){
+    datas=$form.serializeArray();
+    //------  add off -------
+    if(!$('#switch_p2').prop('checked')){
+        datas.push({name:'switch_p2', value: 'off'});
+    }
+    //------  Send setting data to sqlDb -------
+    $.ajax({    
+        url: __local_API_ADDR + "set_letter_data?course_id="+course_id,
+        type: "POST",
+        data: datas,
+        success : function(res) {
+            console.log(res)
+        }
+    });
+}
+
+
+</script>
+</html>
