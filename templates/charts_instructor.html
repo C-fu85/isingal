@@ -18,7 +18,7 @@
         rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="../6869/static/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="../static/static/css/sb-admin-2.min.css" rel="stylesheet">
 
     <!-- DataTables  -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.25/datatables.min.css"/>
@@ -49,12 +49,12 @@
                 <!-- 這裡將動態生成的系，年級和班級 -->
             <hr class="sidebar-divider">
             
-            <li class="nav-item" id="sideblock_2" style="visibility: visible;">
+            <!-- <li class="nav-item" id="sideblock_2" style="visibility: visible;">
                 <a class="nav-link collapsed" onclick="showAnalysisModal()" href="#" data-toggle="collapse" data-target="#collapsePages"
                     aria-expanded="true" aria-controls="collapsePages">
-                    <span style="color: #f1f7ff;">身份分析比較圖</span> <!-- 添加 text-white 類 -->
+                    <span style="color: #f1f7ff;">身份分析比較圖</span> 添加 text-white 類
                 </a>
-            </li>
+            </li> -->
            
             
             
@@ -92,8 +92,9 @@
             <div class="container-fluid"  id="infoblock_1" >
 
                 <h1 class="h4 mb-2 text-gray-800 pa-left" id='label_course_name'>以下是您本學期每位學生的學習表現：
-                    <button id="resetFilter" style="border-radius: 5px; font-size: 1em;">reset</button>
-                    <label><input type="checkbox" id="filterP1"> M1</label>
+                    <!-- <button id="resetFilter" style="border-radius: 5px; font-size: 1em;">reset</button>
+                    <label><input type="checkbox" id="filterP1"> M1 <span style="font-size: 0.8em;">(出席率低於4成)</span></label> -->
+
                     
                 </h1>
                 <div id="student-status-display" style="margin-top: 20px;"></div>
@@ -136,10 +137,11 @@
                                     <input id="week_next" type="button" value="次一週>>" onclick="next_week()" style="border-radius: 5px; font-size: 1em;">
                                 </div>
                                 <div id="container-classVSstudent"></canvas>
-                                資料更新日期：2023.11.13 <p>
                           
                           </div>
                         </div>
+                        <p>資料更新:113上學年第五周 <p>
+
                     </div>
                     </div>
                     
@@ -162,7 +164,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; 淡江大學　資訊處遠距教學發展中心</span>
+                        <span>Copyright &copy; 淡江大學　資訊處遠距教學發展中心   系統更新:2024.10.15 </span>
                     </div>
                 </div>
             </footer>
@@ -420,9 +422,13 @@ pe_series = [];
 course_name = '';
 
 //setweek
-_currentWeek=18;
-_currentCategories= [1,2,3,4,5,6,7,8,9];
+_currentWeek = 5;
+_currentCategories = [];
+for (let i = 1; i <= _currentWeek; i++) {
+    _currentCategories.push(i);
+}
 _traverseWeek=_currentWeek;
+_semester = 1131
 
 p_thres=e_thres=0.6;
 _last_pt_color='';
@@ -459,7 +465,7 @@ function onSelect_student(){
 function input_teacherId(){
     
     //const tid = window.localStorage.getItem("teacher_id") || [];
-    const instructor_id = window.localStorage.getItem("instructor_id") || 153608;
+    const instructor_id = window.localStorage.getItem("instructor_id") || 165698;
     //tid = 153608;
     //const tid = 127504;
     url_text = __local_API_ADDR + 'get_instructor_name?instructor_id='+instructor_id//get teacher name
@@ -489,37 +495,37 @@ function input_teacherId(){
     // 3. display all course's activity count
     
     
-    url_text = __local_API_ADDR + "get_course_list_by_teacherid?semester=1122&teacher_id="+t_id
+    // url_text = __local_API_ADDR + "get_course_list_by_teacherid?semester="+_semester+"&teacher_id="+t_id
     
-    $.ajax({
-        url: url_text,
-        type: "GET"
-    }).error( function(request, error) {
-        alert("Error: responseText: " + request.responseText);    
-    }).success( function(getCourseData) {
+    // $.ajax({
+    //     url: url_text,
+    //     type: "GET"
+    // }).error( function(request, error) {
+    //     alert("Error: responseText: " + request.responseText);    
+    // }).success( function(getCourseData) {
     
-        if (getCourseData == JSON.stringify({})) {
-            alert("您這學期並未於iClass平台上擔任其中一門課程的授課教師！");
-            $body.removeClass("loading");
-            location.href = "index";
-            return;
-        }
+    //     if (getCourseData == JSON.stringify({})) {
+    //         alert("您這學期並未於iClass平台上擔任其中一門課程的授課教師！");
+    //         $body.removeClass("loading");
+    //         location.href = "index";
+    //         return;
+    //     }
         
-        course_list = JSON.parse(getCourseData);
-        //window.alert(course_list.length)
+    //     course_list = JSON.parse(getCourseData);
+    //     //window.alert(course_list.length)
         
-    });
+    // });
 }
 let firstCheck = 0;
 
 function storge_course_id(){
     //alert(course_id);
     localStorage.setItem("course_id", course_id);
-    localStorage.setItem("semester", semester);
+    localStorage.setItem("semester", _semester);
 }
 
 function input_studentData() { 
-    const instructor_id = window.localStorage.getItem("instructor_id") || 153608;
+    const instructor_id = window.localStorage.getItem("instructor_id") || 165698;
     url_text = __local_API_ADDR + "get_instructor?instructor_id=" + instructor_id;
 
     if (firstCheck == 0) {
@@ -555,15 +561,21 @@ function input_studentData() {
                             '<option value="僑生">僑生</option>' +
                         '</select>' +
                     '</th>' +
-                    '<th title="帶改">學習狀況' +
+                    '<th style="display:none;" title="帶改">學習狀況' +
                         '<select id="attendance-filter">' +
-                            '<option value="default">預設</option>' +
-                            '<option value="asc">升序</option>' +
-                            '<option value="desc">降序</option>' +
+                            '<option value="desc">由低到高</option>' +
+                            '<option value="asc">由高到低</option>' +
+                            '<option value="default">學號順序</option>' +
                         '</select>' +
                     '</th>' +
                     '<th style="display:none;" title="帶改">成績</th>'+ 
-                    '<th title="帶改">出席率</th>' +
+                    '<th title="帶改">出席率' +                       
+                        '<select id="engagement-filter">' +
+                            '<option value="desc">由低到高</option>' +
+                            '<option value="asc">由高到低</option>' +
+                            '<option value="default">學號順序</option>' +
+                        '</select>' +
+                    '</th>' +
                     '<th style="display:none;">課程代碼</th>' + // 隱藏的課程代碼列
                     '<th style="display:none;">p1</th>' + // 新增隱藏的 p1 列
                     '<th style="display:none;">p2</th>' + // 新增隱藏的 p2 列
@@ -598,7 +610,7 @@ function input_studentData() {
                     var identity = document.createElement("a");
                     let stu_i = cl.stu_Identity;
 
-                    if (stu_i.trim().length != 0) {
+                    if (stu_i && stu_i.trim().length != 0) {
                         identity += stu_i;
                     }
 
@@ -613,9 +625,9 @@ function input_studentData() {
                         '<th>' + stu_name + '</th>' + 
                         '<th>' + course_name_abbr + '</th>' + // 班級信息
                         '<th>' + identity + '</th>' +
-                        '<th><span style="display: none;">'+performance+'</span>'+src_g+gp+"  "+src_y+yp+"  "+src_o+op+"  "+src_r+rp+'</th>' +                        
-                        '<th title="' + (studentP == 0 ? '沒有打成績' : '') + '">' + studentP + '</th>' +
-                        '<th style="display:none;" title="' + (studentE == 0 ? '沒有點名' : '') + '">' + studentE + '</th>' +
+                        '<th style="display:none;"><span style="display: none;">'+performance+'</span>'+src_g+gp+"  "+src_y+yp+"  "+src_o+op+"  "+src_r+rp+'</th>' +
+                        '<th  title="' + (studentE == 0 ? '沒有點名' : '') + '">' + studentE + '</th>' +                        
+                        '<th style="display:none;" title="' + (studentP == 0 ? '沒有打成績' : '') + '">' + studentP + '</th>' +
                         '<th style="display:none;">' + course_code_abbr + '</th>' + // 隱藏課程代碼
                         '<th style="display:none;">' + p1_num + '</th>' + // 隱藏的 p1 數據
                         '<th style="display:none;">' + p2_num + '</th>' + // 隱藏的 p2 數據
@@ -625,14 +637,14 @@ function input_studentData() {
                     table.append(row);
                 }
             }
+            filterTable();
         });
 
         // 篩選功能
-        $(document).on('input change', '#name-search, #identity-filter, #attendance-filter, #performance-filter', function() {
+        $(document).on('input change', '#name-search, #identity-filter, #attendance-filter, #performance-filter, #engagement-filter', function() {
             filterTable();
         });
     }
-
     firstCheck = 1;
 }
 
@@ -646,23 +658,24 @@ function createStudentStatusDisplay(studentIdentity, studentP, studentE, stu_no,
         ? '出席率:任課老師都沒有點名' 
         : `出席率: ${studentE} - 此出席率顯示學生在課堂上的參與度。出席率越高，表示學生對課程的參與越積極。`;
     // Performance details
-    const performanceDetails = `
-        <p>${attendanceMessage}</p>
-        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-            <div style="display: flex; align-items: center;">
-                有${src_g} ${gp} (綠色) - 在第1象限
-            </div>
-            <div style="display: flex; align-items: center;">
-                有${src_y} ${yp} (黃色) - 在第2象限
-            </div>
-            <div style="display: flex; align-items: center;">
-                有${src_o} ${op} (橙色) - 在第4象限
-            </div>
-            <div style="display: flex; align-items: center;">
-                有${src_r} ${rp} (紅色) - 在第3象限
-            </div>
-        </div>
-    `;
+    // const performanceDetails = `
+    //     <p>${attendanceMessage}</p>
+    //     <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+    //         <div style="display: flex; align-items: center;">
+    //             有${src_g} ${gp} (綠色) - 在第1象限
+    //         </div>
+    //         <div style="display: flex; align-items: center;">
+    //             有${src_y} ${yp} (黃色) - 在第2象限
+    //         </div>
+    //         <div style="display: flex; align-items: center;">
+    //             有${src_o} ${op} (橙色) - 在第4象限
+    //         </div>
+    //         <div style="display: flex; align-items: center;">
+    //             有${src_r} ${rp} (紅色) - 在第3象限
+    //         </div>
+    //     </div>
+    // `;
+    
 
     // Learning status message
 
@@ -672,7 +685,7 @@ function createStudentStatusDisplay(studentIdentity, studentP, studentE, stu_no,
     // Complete status display
     return `
         <h4>${stu_no} ${stu_name}的學習狀況</h4>
-        ${performanceDetails}
+        <p>${attendanceMessage}</p>
     `;
 }
 
@@ -680,12 +693,13 @@ function handleStudentClick(student_identity, studentP, studentE, stu_no, stu_na
     if(advisor_id == "null") {
         advisor_id = 127504;
     }
+    localStorage.setItem("advisor_id", advisor_id);
     document.getElementById('selectWeek').innerText = null;
     document.getElementById('selectWeek').value =_currentWeek;
     localStorage.setItem("stu_name", stu_name);
     localStorage.setItem("student_id", stu_no);
     initial_week();
-    inputploxboxdata(student_identity, studentP, studentE);
+    //inputploxboxdata(student_identity, studentP, studentE);
     draw_student_pe(advisor_id,stu_no, stu_name);
     inputCompareClassDataWithStudent(advisor_id,stu_no,_currentWeek);
     const studentStatus = createStudentStatusDisplay(course_name_abbr, studentP, studentE, stu_no, stu_name, gp, yp, op, rp);
@@ -946,7 +960,6 @@ if (!advisor_id) {
 
 let student_url = __local_API_ADDR + "get_student_weekly_avg?stu_no=" + student_id;
 let advisor_url = __local_API_ADDR + "get_advisor_avg?advisor_id=" + advisor_id;
-console.log(advisor_url);
 $.when(
     $.ajax({ url: student_url, type: "GET", dataType: "json" }),
     $.ajax({ url: advisor_url, type: "GET", dataType: "json" })
@@ -962,8 +975,11 @@ $.when(
         let _categories = [];
 
         // Determine categories (weeks) based on the semester
-        if (window.semester == '1121') {
-            _categories = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+        if (window.semester == _semester) {
+            _categories = [];
+            for (let i = 1; i <= _currentWeek; i++) {
+                _categories.push(i);
+            }
             _week = _currentWeek;
         } else {
             _categories = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
@@ -1107,7 +1123,7 @@ function set_week() {
     const advisor_id = localStorage.getItem('advisor_id');  // Assuming you have the advisor ID stored
 
     // Compare student with the class for the selected week
-    inputCompareClassDataWithStudent( student_id, _traverseWeek);
+    inputCompareClassDataWithStudent(advisor_id ,student_id, _traverseWeek);
 }
 
 function last_week() {
@@ -1122,32 +1138,33 @@ function last_week() {
     
     const stu_name = localStorage.getItem('stu_name');
     const student_id = localStorage.getItem('student_id');
-
+    const advisor_id = localStorage.getItem('advisor_id');  
+    console.log(_traverseWeek);
     // Compare student with the class for the previous week
-    inputCompareClassDataWithStudent( student_id, _traverseWeek);
+    inputCompareClassDataWithStudent(advisor_id ,student_id, _traverseWeek);
 }
 
 function next_week() {
-    if (window.semester == '1122' && _traverseWeek >= _currentWeek) return;
-    else if (window.semester != '1122' && _traverseWeek >= 18) return;
+    if ( _traverseWeek >= _currentWeek) _traverseWeek = _currentWeek;
+    else if (window.semester != _semester && _traverseWeek >= 18) return;
     else _traverseWeek += 1;
+
 
     document.getElementById('week').textContent = _traverseWeek;
     document.getElementById('selectWeek').value = _traverseWeek;
-    
+
     const stu_name = localStorage.getItem('stu_name');
     const student_id = localStorage.getItem('student_id');
     const advisor_id = localStorage.getItem('advisor_id');
 
     // Compare student with the class for the next week
-    inputCompareClassDataWithStudent( student_id, _traverseWeek);
+    inputCompareClassDataWithStudent(advisor_id,student_id, _traverseWeek);
 }
 
 
 function inputCompareClassDataWithStudent(advisor_id,student_id, week) {
     let student_url = __local_API_ADDR + "get_student_weekly_avg?stu_no=" + student_id + "&weeks=" + week;
     let advisor_url = __local_API_ADDR + "get_advisor_avg?advisor_id=" + advisor_id + "&weeks=" + week;
-
     $.when(
         $.ajax({ url: student_url, type: "GET", dataType: "json" }),
         $.ajax({ url: advisor_url, type: "GET", dataType: "json" })
@@ -1271,7 +1288,7 @@ function showClassComparisonForCurrentWeek(advisorData, studentData, currentWeek
                 name: '班級出席率',
                 type: 'boxplot',
                 data: attendanceData,
-                color: 'blue',
+                color: '#AAB6E0',
                 pointWidth: 80,  // Adjust the width of the box
                 tooltip: {
                     headerFormat: '<em>指標 {point.key}</em><br/>'
@@ -1283,9 +1300,9 @@ function showClassComparisonForCurrentWeek(advisorData, studentData, currentWeek
                 type: 'scatter',
                 data: scatterDataE,
                 marker: {
-                    fillColor: 'blue',
+                    fillColor: '#EC8C32',
                     lineWidth: 2,
-                    lineColor: 'black'
+                    lineColor: 'orange'
                 },
                 tooltip: {
                     pointFormat: '學生出席率: {point.y}'
@@ -1325,7 +1342,7 @@ function showClassComparisonForCurrentWeek(advisorData, studentData, currentWeek
 
 
 $(document).ready(function() {
-    const instructor_id = window.localStorage.getItem("instructor_id") || 153608; // 你的 instructorId
+    const instructor_id = window.localStorage.getItem("instructor_id") || 165698; // 你的 instructorId
     $.ajax({
         url: __local_API_ADDR + '/get_classes_by_instructor?instructor_id=' + instructor_id,
         type: 'GET',
@@ -1401,6 +1418,7 @@ $(document).ready(function() {
                                         clearFilters();
                                         currentFilters.class = fullname;
                                         filterTable();
+                                        console.log("篩選班級:", fullname);
                                         //filterTableByClass(department.substring(0, 2), className); // 篩選班級的函數
                                     });
                                 gradeCollapseDiv.children().append(classLink);
@@ -1576,6 +1594,7 @@ function filterTable() {
     var filter = $('#identity-filter').val();
     var attendanceSort = $('#attendance-filter').val();
     var performanceSort = $('#performance-filter').val();
+    var engagementSort = $('#engagement-filter').val();  // New filter for engagement
     var found = false;
 
     var rows = $('#tbl_course_list tr').not(':first').detach();
@@ -1593,6 +1612,17 @@ function filterTable() {
         }
     });
 
+    rows.sort(function(a, b) {
+        var engagementA = parseFloat($(a).find('th').eq(5).text());  // 6th column (index 5)
+        var engagementB = parseFloat($(b).find('th').eq(5).text());  // 6th column (index 5)
+        if (engagementSort === 'asc') {
+            return attendanceB - attendanceA;
+        } else if (engagementSort === 'default') {
+            return 0;
+        } else {
+            return engagementA - engagementB;
+        }
+    });
     $.each(rows, function(index, row) {
         $('#tbl_course_list').append(row);
     });
