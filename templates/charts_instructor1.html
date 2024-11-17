@@ -19,7 +19,7 @@
 
     <!-- Custom styles for this template-->
     <link href="../6869/static/css/sb-admin-2.min.css" rel="stylesheet">
-
+    
     <!-- DataTables  -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.25/datatables.min.css"/>
 
@@ -49,12 +49,12 @@
                 <!-- 這裡將動態生成的系，年級和班級 -->
             <hr class="sidebar-divider">
             
-            <li class="nav-item" id="sideblock_2" style="visibility: visible;">
+            <!-- <li class="nav-item" id="sideblock_2" style="visibility: visible;">
                 <a class="nav-link collapsed" onclick="showAnalysisModal()" href="#" data-toggle="collapse" data-target="#collapsePages"
                     aria-expanded="true" aria-controls="collapsePages">
-                    <!-- <span style="color: #f1f7ff;">身份分析比較圖</span> 添加 text-white 類 -->
+                    <span style="color: #f1f7ff;">身份分析比較圖</span> 添加 text-white 類
                 </a>
-            </li>
+            </li> -->
            
             
             
@@ -92,8 +92,8 @@
             <div class="container-fluid"  id="infoblock_1" >
 
                 <h1 class="h4 mb-2 text-gray-800 pa-left" id='label_course_name'>以下是您本學期每位學生的學習表現：
-                    <button id="resetFilter" style="border-radius: 5px; font-size: 1em;">reset</button>
-                    <label><input type="checkbox" id="filterP1"> M1 <span style="font-size: 0.8em;">(出席率低於4成)</span></label>
+                    <!-- <button id="resetFilter" style="border-radius: 5px; font-size: 1em;">reset</button>
+                    <label><input type="checkbox" id="filterP1"> M1 <span style="font-size: 0.8em;">(出席率低於4成)</span></label> -->
 
                     
                 </h1>
@@ -140,7 +140,7 @@
                           
                           </div>
                         </div>
-                        <p>資料更新日期：2024.10.07 <p>
+                        <p>資料更新:113上學年第五周 <p>
 
                     </div>
                     </div>
@@ -164,7 +164,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; 淡江大學　資訊處遠距教學發展中心</span>
+                        <span>Copyright &copy; 淡江大學　資訊處遠距教學發展中心   系統更新:2024.10.15 </span>
                     </div>
                 </div>
             </footer>
@@ -561,15 +561,21 @@ function input_studentData() {
                             '<option value="僑生">僑生</option>' +
                         '</select>' +
                     '</th>' +
-                    '<th title="帶改">學習狀況' +
+                    '<th style="display:none;" title="帶改">學習狀況' +
                         '<select id="attendance-filter">' +
-                            '<option value="default">預設</option>' +
-                            '<option value="asc">升序</option>' +
-                            '<option value="desc">降序</option>' +
+                            '<option value="desc">由低到高</option>' +
+                            '<option value="asc">由高到低</option>' +
+                            '<option value="default">學號順序</option>' +
                         '</select>' +
                     '</th>' +
                     '<th style="display:none;" title="帶改">成績</th>'+ 
-                    '<th title="帶改">出席率</th>' +
+                    '<th title="帶改">出席率' +                       
+                        '<select id="engagement-filter">' +
+                            '<option value="desc">由低到高</option>' +
+                            '<option value="asc">由高到低</option>' +
+                            '<option value="default">學號順序</option>' +
+                        '</select>' +
+                    '</th>' +
                     '<th style="display:none;">課程代碼</th>' + // 隱藏的課程代碼列
                     '<th style="display:none;">p1</th>' + // 新增隱藏的 p1 列
                     '<th style="display:none;">p2</th>' + // 新增隱藏的 p2 列
@@ -619,9 +625,9 @@ function input_studentData() {
                         '<th>' + stu_name + '</th>' + 
                         '<th>' + course_name_abbr + '</th>' + // 班級信息
                         '<th>' + identity + '</th>' +
-                        '<th><span style="display: none;">'+performance+'</span>'+src_g+gp+"  "+src_y+yp+"  "+src_o+op+"  "+src_r+rp+'</th>' +                        
-                        '<th title="' + (studentP == 0 ? '沒有打成績' : '') + '">' + studentP + '</th>' +
-                        '<th style="display:none;" title="' + (studentE == 0 ? '沒有點名' : '') + '">' + studentE + '</th>' +
+                        '<th style="display:none;"><span style="display: none;">'+performance+'</span>'+src_g+gp+"  "+src_y+yp+"  "+src_o+op+"  "+src_r+rp+'</th>' +
+                        '<th  title="' + (studentE == 0 ? '沒有點名' : '') + '">' + studentE + '</th>' +                        
+                        '<th style="display:none;" title="' + (studentP == 0 ? '沒有打成績' : '') + '">' + studentP + '</th>' +
                         '<th style="display:none;">' + course_code_abbr + '</th>' + // 隱藏課程代碼
                         '<th style="display:none;">' + p1_num + '</th>' + // 隱藏的 p1 數據
                         '<th style="display:none;">' + p2_num + '</th>' + // 隱藏的 p2 數據
@@ -631,14 +637,14 @@ function input_studentData() {
                     table.append(row);
                 }
             }
+            filterTable();
         });
 
         // 篩選功能
-        $(document).on('input change', '#name-search, #identity-filter, #attendance-filter, #performance-filter', function() {
+        $(document).on('input change', '#name-search, #identity-filter, #attendance-filter, #performance-filter, #engagement-filter', function() {
             filterTable();
         });
     }
-
     firstCheck = 1;
 }
 
@@ -652,23 +658,24 @@ function createStudentStatusDisplay(studentIdentity, studentP, studentE, stu_no,
         ? '出席率:任課老師都沒有點名' 
         : `出席率: ${studentE} - 此出席率顯示學生在課堂上的參與度。出席率越高，表示學生對課程的參與越積極。`;
     // Performance details
-    const performanceDetails = `
-        <p>${attendanceMessage}</p>
-        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-            <div style="display: flex; align-items: center;">
-                有${src_g} ${gp} (綠色) - 在第1象限
-            </div>
-            <div style="display: flex; align-items: center;">
-                有${src_y} ${yp} (黃色) - 在第2象限
-            </div>
-            <div style="display: flex; align-items: center;">
-                有${src_o} ${op} (橙色) - 在第4象限
-            </div>
-            <div style="display: flex; align-items: center;">
-                有${src_r} ${rp} (紅色) - 在第3象限
-            </div>
-        </div>
-    `;
+    // const performanceDetails = `
+    //     <p>${attendanceMessage}</p>
+    //     <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+    //         <div style="display: flex; align-items: center;">
+    //             有${src_g} ${gp} (綠色) - 在第1象限
+    //         </div>
+    //         <div style="display: flex; align-items: center;">
+    //             有${src_y} ${yp} (黃色) - 在第2象限
+    //         </div>
+    //         <div style="display: flex; align-items: center;">
+    //             有${src_o} ${op} (橙色) - 在第4象限
+    //         </div>
+    //         <div style="display: flex; align-items: center;">
+    //             有${src_r} ${rp} (紅色) - 在第3象限
+    //         </div>
+    //     </div>
+    // `;
+    
 
     // Learning status message
 
@@ -678,7 +685,7 @@ function createStudentStatusDisplay(studentIdentity, studentP, studentE, stu_no,
     // Complete status display
     return `
         <h4>${stu_no} ${stu_name}的學習狀況</h4>
-        ${performanceDetails}
+        <p>${attendanceMessage}</p>
     `;
 }
 
@@ -1281,7 +1288,7 @@ function showClassComparisonForCurrentWeek(advisorData, studentData, currentWeek
                 name: '班級出席率',
                 type: 'boxplot',
                 data: attendanceData,
-                color: 'blue',
+                color: '#AAB6E0',
                 pointWidth: 80,  // Adjust the width of the box
                 tooltip: {
                     headerFormat: '<em>指標 {point.key}</em><br/>'
@@ -1293,9 +1300,9 @@ function showClassComparisonForCurrentWeek(advisorData, studentData, currentWeek
                 type: 'scatter',
                 data: scatterDataE,
                 marker: {
-                    fillColor: 'blue',
+                    fillColor: '#EC8C32',
                     lineWidth: 2,
-                    lineColor: 'black'
+                    lineColor: 'orange'
                 },
                 tooltip: {
                     pointFormat: '學生出席率: {point.y}'
@@ -1587,6 +1594,7 @@ function filterTable() {
     var filter = $('#identity-filter').val();
     var attendanceSort = $('#attendance-filter').val();
     var performanceSort = $('#performance-filter').val();
+    var engagementSort = $('#engagement-filter').val();  // New filter for engagement
     var found = false;
 
     var rows = $('#tbl_course_list tr').not(':first').detach();
@@ -1604,6 +1612,17 @@ function filterTable() {
         }
     });
 
+    rows.sort(function(a, b) {
+        var engagementA = parseFloat($(a).find('th').eq(5).text());  // 6th column (index 5)
+        var engagementB = parseFloat($(b).find('th').eq(5).text());  // 6th column (index 5)
+        if (engagementSort === 'asc') {
+            return attendanceB - attendanceA;
+        } else if (engagementSort === 'default') {
+            return 0;
+        } else {
+            return engagementA - engagementB;
+        }
+    });
     $.each(rows, function(index, row) {
         $('#tbl_course_list').append(row);
     });

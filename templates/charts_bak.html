@@ -72,6 +72,17 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                     aria-expanded="true" aria-controls="collapsePages">
                     <i class="fas fa-fw fa-folder"></i>
+                    <span>113第一學期</span>
+                </a>
+                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded" id='divCourseContainer_1131'>
+                        <a class="collapse-item" href="charts.html">課程列表:</a>
+                    </div>
+                </div>
+
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                    aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-fw fa-folder"></i>
                     <span>112第二學期</span>
                 </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
@@ -191,9 +202,18 @@
                                     <select id="selectWeek" onchange='set_week()' style="border-radius: 5px; font-size: 1em;"></select>
                                     <input id="week_last" type="button" value="<<上一週" onclick="last_week()" style="border-radius: 5px; font-size: 1em;">
                                     <input id="week_next" type="button" value="次一週>>" onclick="next_week()" style="border-radius: 5px; font-size: 1em;">
+                                    <label>
+                                        <input type="checkbox" class="filterCheckbox" id="PEfilterP1" > M1
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" class="filterCheckbox" id="PEfilterP2" > M2
+                                    </label>
+                                    <label>
+                                        <input type="checkbox"  id="PEfilterP3"> M3
+                                    </label>
                                 </div>
                                 <div id='container-pe-course'></div>
-                                資料更新日期：2023.11.13 <p>點選上方資料點後，可觀察個別學生表現
+                                資料更新日期：113上學年第六周 <p>點選上方資料點後，可觀察個別學生表現
                             </div>
                         </div>
 
@@ -211,7 +231,7 @@
                                 </br>performance: 作業、測驗、問卷、點名及討論累計分數相較全班之表現, 
                                 </br>engagement: 點名、作業及測驗繳交累計次數相較全班之表現
                                 <br>
-                                <a onclick="storge_course_id()" style="width: 50%; margin: auto; color:blue;" href="charts_detail" target="_blank">查看全體同學學期各週表現</a>
+                                <a hidden onclick="storge_course_id()" style="width: 50%; margin: auto; color:blue;" href="charts_detail" target="_blank">查看全體同學學期各週表現</a>
                             </div>
                         </div>
                     </div>
@@ -273,24 +293,24 @@
                 </div>
             </div>
             <!-- /.container-fluid -->
-
+            
             <!-- Advisor Edition -->
             <div class="container-fluid"  id="infoblock_2" style="display: none;">
-                
-                <h1 class="h4 mb-2 text-gray-800 pa-left" id='label_course_name'>以下是您本學期每位學生的學習表現：
+                <h1 class="h4 mb-2 text-gray-800 " id='label_course_name'>本學期學生學習表現：
                     <button id="resetFilter" style="border-radius: 5px; font-size: 1em;">reset</button>
-                    <label><input type="checkbox" id="filterP1"> P1</label>
-                    <label><input type="checkbox" id="filterP2"> P2</label>
-                    <label><input type="checkbox" id="filterP3"> P3</label>
+                    <label><input type="checkbox" id="filterP1"> M1(出席率未達4成)</label>
+                    <label><input type="checkbox" id="filterP2"> M2(低參與、低成效)</label>
+                    <label hidden><input type="checkbox" id="filterP3" > M3</label>
                 </h1>
+                <div id="explanation" ></div>
                 <br>
                 <a>圖示表示學生表現位於何區 :<a>
                 <br> 
-                <img src="../static/img/green.png" width="16" height="16" style="margin-left: 20px">綠區(第一象限)
-                <img src="../static/img/yellDow.png" width="16" height="16" style="margin-left: 20px">黃區(第四象限)
-                <img src="../static/img/orange.png" width="16" height="16" style="margin-left: 20px">橘區(第二象限)
-                <img src="../static/img/red.png" width="16" height="16" style="margin-left: 20px">紅區(第三象限)             
-
+                <img src="../6869/static/img/green.png" width="16" height="16" style="margin-left: 20px">綠區(第一象限)
+                <img src="../6869/static/img/yellow.png" width="16" height="16" style="margin-left: 20px">黃區(第四象限)
+                <img src="../6869/static/img/orange.png" width="16" height="16" style="margin-left: 20px">橘區(第二象限)
+                <img src="../6869/static/img/red.png" width="16" height="16" style="margin-left: 20px">紅區(第三象限)             
+                
                 <!-- Content Row -->
                 
                 <div class="row">
@@ -307,6 +327,8 @@
                               </tr>
                             </table>
                         </div>
+
+                        <div id="info-display" style="font-size: 22px; line-height: 1.8; margin: 20px 0; color: #333;"></div>       
                         <!-- Area Chart -->
                         <div class="card shadow mb-4">
                             <table id="tbl_student_course_list" height="600">
@@ -334,19 +356,18 @@
                             </ul>
                         
                             <div id="tab01" class="tab-inner" style="display: block;">
-                                <h6 class="m-0 font-weight-bold text-primary"><span id="dynamicStudnetName"></span>於本課程中相對於所有修課同學的表現(紅點)</h6>
+                                <h6 class="m-0 font-weight-bold text-primary"><span id="dynamicStudnetNumber"></span><span id="dynamicStudnetName"></span> 於本課程中相對於所有修課同學的表現(紅點)</h6>
                                 <div id="container-pe-course-student"></div>
                             </div>
                             <div id="tab02" class="tab-inner" style="display: none;">
-                                <h6 class="m-0 font-weight-bold text-primary"><span id="dynamicStudnetName"></span>每周的表現與班平均</h6>
+                                <h6 class="m-0 font-weight-bold text-primary"><span id="dynamicStudnetNumber1"></span><span id="dynamicStudnetName1"></span> 每周的表現與班平均</h6>
                                 <div id="container-pe-avg"></div>
                             </div>
 
                         </div>
                         performance: 作業、測驗、問卷、點名及討論累計分數相較全班之表現, 
                         </br> engagement: 點名、作業及測驗繳交累計次數相較全班之表現
-                        </br>更新至第8週 : 2023.11.13
-        
+                        
                     </div>
 
                     <div class="col-xl-4 col-lg-5">
@@ -354,14 +375,15 @@
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3">
                                 <h6 class="m-0 font-weight-bold text-primary">
-                                    <span id="dynamicStudnetName1"></span>本學期所修課程警示燈號分佈概況
+                                    <span id="dynamicStudnetNumber2"></span><span id="dynamicStudnetName2"></span> 本學期所修課程警示燈號分佈概況
                                 </h6>
                               <div id="divSemiCirclePieChart-student"></canvas>
                               </div>
                             </div>
+                            <p>資料更新:113上學年第六周 <p>
                         </div>
-                    </div>
 
+                    </div>
                 </div>
                 
             </div>
@@ -371,7 +393,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; 淡江大學　資訊處遠距教學發展中心</span>
+                        <span>Copyright &copy; 淡江大學　資訊處遠距教學發展中心    系統更新:2024.10.22</span>
                     </div>
                 </div>
             </footer>
@@ -436,12 +458,12 @@
                     <p>&emsp;第III象限<a class="r">紅</a>區：代表學習參與及成績表現均不佳，也許除課業問題外尚需其他生活輔導，可能需要其他師長介入共同輔導（如：導師、教官、諮輔專業人員）。 </p>
                     <p>&emsp;第IV象限<a class="y">黃</a>區：代表學生可能已了解授課內容，以致參與度差但成績表現尚可，教師可以規劃並鼓勵學生研習進階課程。 </p>
                     <p>5.畫面右側為各區分佈情況，游標靠近時會呈現該區之人數及比例 </p>
-                    <img src="../static/img/PED_png/PED_piechart1.png" alt="PED扇形圖">
-                    <img src="../static/img/PED_png/PED_piechart2.png" alt="PED扇形圖2">
+                    <img src="../6869/static/img/PED_png/PED_piechart1.png" alt="PED扇形圖">
+                    <img src="../6869/static/img/PED_png/PED_piechart2.png" alt="PED扇形圖2">
                     <p>6.畫面中間下方呈現個別學生表現（教師可從全班的PED上，或從下拉選單中點選學生），以折線圖觀察指定學生逐週之學習成效（藍線）和參與度（黑線）。 </p>
-                    <img src="../static/img/PED_png/PED_linechart.png" alt="PED折線圖">
+                    <img src="../6869/static/img/PED_png/PED_linechart.png" alt="PED折線圖">
                     <p>7.畫面右下方呈現學生名單：第II、III、IV象限皆為該區之名單，唯綠區所呈現為前5%表現最優的學生（<a class="b">藍點</a>）。 </p>
-                    <img src="../static/img/PED_png/PED_stu_classify.png" alt="PED學生分類">
+                    <img src="../6869/static/img/PED_png/PED_stu_classify.png" alt="PED學生分類">
                     <p>8.<a class="r">授課教師</a>可從PED的4個象限中，精準地發現學習落後或是參與情況不佳的學生，以便適時進行課業輔導、勉勵學習，或是調整教學策略與節奏。</p>
                     <p>9.PED所呈現之每位學生各科的燈號已匯入SIS（導師輔導系統），使<a class="r">班導師</a>能了解導生每週的學習成效與學習態度，掌握需要關懷的對象，並得以適時介入輔導，以提升學生的留校率與畢業率。 </p>
                 </div>
@@ -567,9 +589,13 @@ pe_series = [];
 course_name = '';
 
 //setweek
-_currentWeek=9;
-_currentCategories= [1,2,3,4,5,6,7,8,9];
+_currentWeek = 9;
+_currentCategories = [];
+for (let i = 1; i <= _currentWeek; i++) {
+    _currentCategories.push(i);
+}
 _traverseWeek=_currentWeek;
+_semester = 1131
 
 p_thres=e_thres=0.6;
 _last_pt_color='';
@@ -619,9 +645,9 @@ function last_week(){
 
 function next_week(){
 
-    if (window.semester =='1122' && _traverseWeek >= _currentWeek)
+    if (window.semester == _semester && _traverseWeek >= _currentWeek)
         return;
-    else if (window.semester !='1122' && _traverseWeek >= _maxWeek)
+    else if (window.semester != _semester && _traverseWeek >= _maxWeek)
         return;
     else
         _traverseWeek += 1       
@@ -649,7 +675,7 @@ function input_teacherId(){
         url : url_text,
         type : "GET",
         success : function(data) {
-            document.getElementById('teacher_name').textContent = data + "老師";
+            document.getElementById('teacher_name').textContent = data.student_name + "老師";
         }
     });
     
@@ -671,8 +697,7 @@ function input_teacherId(){
     
     __1st_course_id='';
     
-    url_text = __local_API_ADDR + "get_course_list_by_teacherid?semester=1122&teacher_id="+t_id
-    
+    url_text = __local_API_ADDR + "get_course_list_by_teacherid?semester="+_semester+"&teacher_id="+t_id
     $.ajax({
         url: url_text,
         type: "GET"
@@ -692,7 +717,7 @@ function input_teacherId(){
         
         if (course_list.length!=0){
     
-            var container = $('#divCourseContainer_1122');
+            var container = $('#divCourseContainer_1131');
             container.empty();
             
             // set id as course_code
@@ -714,7 +739,7 @@ function input_teacherId(){
                 a.appendChild(linkText);
                 a.title = course_name + course_code.substring(11) ;
                 //a.href = "charts.html?semester=" + semester + "&cid=" +  course_id;
-                a.href="javascript:redraw_chart(" + course_id + ",1122)";
+                a.href="javascript:redraw_chart(" + course_id + ","+_semester+")";
                 
                 container.append(a);
                 
@@ -723,7 +748,7 @@ function input_teacherId(){
             
                     
             if (__1st_course_id.length!=0){
-                setTimeout( function() { redraw_chart(__1st_course_id, '1122'); }, 100);
+                setTimeout( function() { redraw_chart(__1st_course_id, _semester); }, 100);
             }
         }
     });
@@ -962,8 +987,73 @@ function input_teacherId(){
             }
         }
     });
+    semester = '1122';
+    
+    url_text = __local_API_ADDR + "get_course_list_by_teacherid?semester=1122&teacher_id="+t_id
+    //alert(url_text);
+    
+    $.ajax({
+        url: url_text,
+        type: "GET"
+    }).error( function(request, error) {
+        alert("Error: responseText: " + request.responseText);    
+    }).success( function(getCourseData) {
+    
+        if (getCourseData == JSON.stringify({})) {
+            return;
+        }
+        
+        course_list = JSON.parse(getCourseData);
+        //window.alert(course_list.length)
+        
+        if (course_list.length!=0){
+    
+            var container = $('#divCourseContainer_1122');
+            container.empty();
+            
+            // set id as course_code
+            for (let cl of course_list) {
+                let txtCaption = "";
+                let course_code = cl.course_code;
+                let course_name = cl.course_name;
+                let course_id = cl.course_id;
+                let enroll_student_cnt = cl.enroll_student_cnt;            
+    
+                var br = document.createElement('br');
+    
+                var a = document.createElement('a');
+                var linkText = document.createTextNode(course_name + course_code.substring(11) );
+                a.appendChild(linkText);
+                a.title = course_name + course_code.substring(11) ;
+                //a.href = "charts.html?semester=" + semester + "&cid=" +  course_id;
+                a.href="javascript:redraw_chart(" + course_id + ",1122)";
+                 
+                container.append(a);
+                
+                container.append(br);            
+            }     
+        }
+    });    
+}
+class PEF {
+    static filterP1 = false;
+    static filterP2 = false;
+    static filterP3 = false;
 }
 
+$('#PEfilterP1').on('click', function() {
+    PEF.filterP1 = !PEF.filterP1;
+    redraw_chart(window.course_id, window.semester , _traverseWeek);
+    
+});
+$('#PEfilterP2').on('click', function() {
+    PEF.filterP2 = !PEF.filterP2;
+    redraw_chart(window.course_id, window.semester , _traverseWeek);
+});
+$('#PEfilterP3').on('click', function() {
+    PEF.filterP3 = !PEF.filterP3;
+    redraw_chart(window.course_id, window.semester , _traverseWeek);
+});
 function redraw_chart(course_id, semester, traverseWeek) {
 
     var fetchdata_json = new Array();
@@ -971,12 +1061,13 @@ function redraw_chart(course_id, semester, traverseWeek) {
     window.course_id = course_id;
     window.semester = semester;
     
-    if (semester=='1122') {
+    if (semester==_semester) {
         _week=_currentWeek
     }
     else {
         _week=18
     }
+    
     document.getElementById('week').textContent = _week;
     _traverseWeek = _week;
     
@@ -990,14 +1081,12 @@ function redraw_chart(course_id, semester, traverseWeek) {
         option.text = g;
         weeks.appendChild(option);
     }
-    
     $.ajax({    
-        url: __local_API_ADDR + "get_pe_data?course_id="+course_id+"&week="+_week,
+        url: __local_API_ADDR + "get_pe_data?course_id="+course_id+"&week="+(_week),
         type: "GET"
     }).success( function(getData) {
         course_name = '';
         week_list = JSON.parse(getData);
-        
         document.getElementById('label_student_list_I').textContent = ""; 
         document.getElementById('label_student_list_II').textContent = ""; 
         document.getElementById('label_student_list_III').textContent = ""; 
@@ -1009,7 +1098,8 @@ function redraw_chart(course_id, semester, traverseWeek) {
             week = el.week;
             course_name = el.course_name;
             course_code = el.course_code;
-            
+            let filteredDataList = [];
+
             //console.log(course_code)
             
             caption_text = ""
@@ -1019,46 +1109,72 @@ function redraw_chart(course_id, semester, traverseWeek) {
                 
                 for(d of el.data_list) {
                     d.color = scatter_color[d.color_type];
-                    
-                    $("#ddlStudents").append('<option value="' + d.user_code + '">' + d.name + '</option>') 
-                    
-                    // Quadrant I, GREEN
-                    if (d.x >=0.6 & d.y >=0.6){
-                        if (d.x >=0.95 & d.y >=0.95){
-                            textArea_1 = document.getElementById('label_student_list_I');
+                    $("#ddlStudents").append('<option value="' + d.user_code + '">' + d.name + '</option>');
+
+                    // Existing quadrant logic...
+                    if (d.x >= 0.6 && d.y >= 0.6) {
+                        if (d.x >= 0.95 && d.y >= 0.95) {
                             document.getElementById('label_student_list_I').textContent += "  " + d.name;
                             d.color = '#0040FF';
-                        }
-                        else {
+                        } else {
                             d.color = '#9FE6A0';
                         }
-                    }
-                    // Quadrant II, YELLOW
-                    else if (d.x <0.6 & d.y >=0.6){
-                        textArea_2 = document.getElementById('label_student_list_II');
+                    } else if (d.x < 0.6 && d.y >= 0.6) {
                         document.getElementById('label_student_list_II').textContent += "  " + d.name;
                         d.color = '#FD8C04';
-                    }
-                    // Quadrant III, RED
-                    else if (d.x <0.6 & d.y <0.6){
-                        textArea_3 = document.getElementById('label_student_list_III');
-                        document.getElementById('label_student_list_III').textContent += "  " + d.name;             
+                    } else if (d.x < 0.6 && d.y < 0.6) {
+                        document.getElementById('label_student_list_III').textContent += "  " + d.name;
                         d.color = '#E60965';
-                    }
-                    // Quadrant IV, FFFF37
-                    else {
-                        textArea_4 = document.getElementById('label_student_list_IV');
-                        document.getElementById('label_student_list_IV').textContent += "  " + d.name;    
+                    } else {
+                        document.getElementById('label_student_list_IV').textContent += "  " + d.name;
                         d.color = '#FFFF37';
+                    }
+                    if (PEF.filterP1 && !PEF.filterP2 && !PEF.filterP3) {
+    // 只有 P1 被選中，篩選 p1 > 0 的數據
+                        if (d.p1 > 0) {
+                            filteredDataList.push(d); 
+                        }
+                    } else if (!PEF.filterP1 && PEF.filterP2 && !PEF.filterP3) {
+                        // 只有 P2 被選中，篩選 p2 > 0 的數據
+                        if (d.p2 > 0) {
+                            filteredDataList.push(d); 
+                        }
+                    } else if (!PEF.filterP1 && !PEF.filterP2 && PEF.filterP3) {
+                        // 只有 P3 被選中，篩選 p3 > 0 的數據
+                        if (d.p3 > 0) {
+                            filteredDataList.push(d); 
+                        }
+                    } else if (PEF.filterP1 && PEF.filterP2 && !PEF.filterP3) {
+                        // P1 和 P2 被選中，篩選 p1 > 0 或 p2 > 0 的數據
+                        if (d.p1 > 0 || d.p2 > 0) {
+                            filteredDataList.push(d); 
+                        }
+                    } else if (PEF.filterP1 && !PEF.filterP2 && PEF.filterP3) {
+                        // P1 和 P3 被選中，篩選 p1 > 0 或 p3 > 0 的數據
+                        if (d.p1 > 0 || d.p3 > 0) {
+                            filteredDataList.push(d); 
+                        }
+                    } else if (!PEF.filterP1 && PEF.filterP2 && PEF.filterP3) {
+                        // P2 和 P3 被選中，篩選 p2 > 0 或 p3 > 0 的數據
+                        if (d.p2 > 0 || d.p3 > 0) {
+                            filteredDataList.push(d); 
+                        }
+                    } else if (PEF.filterP1 && PEF.filterP2 && PEF.filterP3) {
+                        // P1、P2、P3 全部被選中，篩選 p1 > 0 或 p2 > 0 或 p3 > 0 的數據
+                        if (d.p1 > 0 || d.p2 > 0 || d.p3 > 0) {
+                            filteredDataList.push(d); 
+                        }
+                    } else if(!PEF.filterP1 && !PEF.filterP2 && !PEF.filterP3){
+                        // 如果沒有選中任何篩選條件，保留所有數據
+                        filteredDataList.push(d); 
                     }
                 }
                 
-                fetchdata_json = el.data_list; 
+                fetchdata_json = filteredDataList; ; 
                 _pr = el.red_pt;
                 _po = el.orange_pt;
                 _py = el.yellow_pt;
                 _pg = el.green_pt;
-                
                 var feed = {name: course_name + course_code, data: fetchdata_json, color: el.data_list.color};
                 pe_series.push(feed);
                 //console.log(pe_series);
@@ -1283,7 +1399,7 @@ function draw_student_pe(course_id, student_id, student_name){
         series_p = [];
         series_e = [];
         
-        if (window.semester=='1121'){
+        if (window.semester==_semester){
             _categories= _currentCategories;
             _week = _currentWeek;
             
@@ -1610,7 +1726,7 @@ function input_studentData(){// stu_no, stu_name, stu_idenlity, stu_proformence,
         }).success( function(getStuData) {
     
             if (getStuData == JSON.stringify({})) {
-                alert("並無任何與參與度或活動成績有關之iClass課程紀錄！");
+                alert("您這學期並未擔任任何班級的導師");
                 $body.removeClass("loading");
                 return;
             }
@@ -1640,8 +1756,10 @@ function input_studentData(){// stu_no, stu_name, stu_idenlity, stu_proformence,
                     '<th title="帶改">學習表現'+
                         '<select id="performance-filter">'+
                             '<option value="default">預設</option>'+
-                            '<option value="asc">升序</option>'+
-                            '<option value="desc">降序</option>'+
+                            '<option value="green">綠區</option>'+
+                            '<option value="yellow">黃區</option>'+
+                            '<option value="orange">橘區</option>'+
+                            '<option value="red">紅區</option>'+
                         '</select>'+
                     '</th>'+
                 '</tr>';
@@ -1664,11 +1782,9 @@ function input_studentData(){// stu_no, stu_name, stu_idenlity, stu_proformence,
                     let p2_num = cl.p2_num; // 取得 p2 數據
                     let p3_num = cl.p3_num; // 取得 p3 數據
 
-                    _link = '<a href="javascript:stupage('+stu_no+')" title="點擊查看學生詳情">' + stu_no + "</a>";
+                    _link = '<a href="javascript:stupage(\'' + stu_no + '\', \'' + stu_name + '\')" title="點擊查看學生詳情">' + stu_no + "</a>";
 
                     var identity = cl.stu_Identity ? cl.stu_Identity : '';
-
-                    var performance = parseFloat(gp) + parseFloat(yp); // 計算學習表現
 
                     // 如果 p1_num > 0，則加上淡紅色背景和邊框
                     var rowStyle = '';
@@ -1680,7 +1796,9 @@ function input_studentData(){// stu_no, stu_name, stu_idenlity, stu_proformence,
                         '<th>'+_link+'</th>' +
                         '<th>'+stu_name+'</th>' +
                         '<th>'+identity+'</th>' +
-                        '<th><span style="display: none;">'+performance+'</span>'+src_g+gp+"  "+src_y+yp+"  "+src_o+op+"  "+src_r+rp+'</th>' +
+                        '<th data-green="' + gp + '" data-yellow="' + yp + '" data-orange="' + op + '" data-red="' + rp + '">' +
+                            src_g + gp + "  " + src_y + yp + "  " + src_o + op + "  " + src_r + rp +
+                        '</th>' +
                         '<th style="display:none;">' + p1_num + '</th>' + // 隱藏的 p1 數據
                         '<th style="display:none;">' + p2_num + '</th>' + // 隱藏的 p2 數據
                         '<th style="display:none;">' + p3_num + '</th>' + // 隱藏的 p3 數據
@@ -1700,7 +1818,9 @@ function input_studentData(){// stu_no, stu_name, stu_idenlity, stu_proformence,
     firstCheck = 1;
 }
 
-function stupage(account){
+function stupage(account,stu_name){
+    document.getElementById("info-display").textContent = 
+    "已選擇學生:"  +stu_name+ " 學號:" + account;
     localStorage.setItem("student_id", account);
     input_studentId();
 }
@@ -1718,11 +1838,15 @@ function input_studentId(){//and student name
         type: 'GET',
         success: function(response) {
             // 假設 API 返回的 response 是學生姓名
-            console.log("API 調用成功: " + response);
-            var studentName = response ; // 確保有個默認值以防API出錯
+            var studentName = response.student_name ; // 確保有個默認值以防API出錯
             // 將學生姓名設置到 dynamicCourseName span
             $('#dynamicStudnetName').text(studentName);
             $('#dynamicStudnetName1').text(studentName);
+            $('#dynamicStudnetName2').text(studentName);
+            $('#dynamicStudnetNumber').text(s_id);
+            $('#dynamicStudnetNumber1').text(s_id);
+            $('#dynamicStudnetNumber2').text(s_id);
+
 
         },
         error: function(xhr, status, error) {
@@ -1756,7 +1880,6 @@ function input_studentId(){//and student name
         }
         
         course_list = JSON.parse(getCourseData);
-        
         //alert(course_list);
         
         var table = $('#tbl_student_course_list');
@@ -1793,6 +1916,8 @@ function input_studentId(){//and student name
                 let _e = cl.e;            
                 let color = cl.color;     
                 let course_id = cl.course_id;   
+                let p1_num = cl.p1; // 取得 p1 數據
+
                 /*
                 if (_p==0){
                    if (_e==0){
@@ -1806,7 +1931,7 @@ function input_studentId(){//and student name
                 var linkText = document.createTextNode(course_name + course_code );
                 a.appendChild(linkText);
                 a.title = course_name + course_code ;
-                a.href="javascript:redraw_student_chart(" + course_code.substring(11) + ",1122)";
+                a.href="javascript:redraw_student_chart(" + course_code.substring(11) + ","+_semester+")";
                 
                 container_1.append(a);                
                 container_1.append(br);       
@@ -1817,20 +1942,24 @@ function input_studentId(){//and student name
                 }
                 else if (color=='g') {
                     _g +=1;
-                    src = '<img src="../static/img/green.png" width="16" height="16">'
+                    src = '<img src="../6869/static/img/green.png" width="16" height="16">'
                 }
                 else if (color=='y') {
                     _y +=1;
-                    src = '<img src="../static/img/yellow.png" width="16" height="16">'
+                    src = '<img src="../6869/static/img/yellow.png" width="16" height="16">'
                 }
                 else {
                     _r +=1; 
-                    src = '<img src="../static/img/red.png" width="16" height="16">'
+                    src = '<img src="../6869/static/img/red.png" width="16" height="16">'
                 }
                 
-                _link = '<a href="javascript:redraw_student_chart(' +course_id + ',1122)' + '">' + course_code + "</a>"
+                _link = '<a href="javascript:redraw_student_chart(' +course_id + ','+_semester+')' + '">' + course_code + "</a>"
+                var rowStyle = '';
 
-                var row = '<tr>' + 
+                if (p1_num > 0) {
+                    rowStyle = ' style="background-color: rgba(255, 0, 0, 0.1); border: 1px solid rgba(255, 0, 0, 0.3);"';
+                }
+                var row = '<tr' + rowStyle + ' cellpadding="15px">' + 
                     '<th>'+_link+'</th>' +
                     '<th>'+course_name+'</th>' +
                     '<th>'+src+'</th>' +
@@ -1845,7 +1974,7 @@ function input_studentId(){//and student name
 
             if (__1st_course_id.length!=0){
                 
-                setTimeout( function() { redraw_student_chart(__1st_course_id, '1122'); }, 300);
+                setTimeout( function() { redraw_student_chart(__1st_course_id, _semester); }, 300);
             }
         }
     });
@@ -1935,7 +2064,7 @@ window.semester = semester;
 
 _s_id = this.user_code;
 
-if (semester=='1122') {
+if (semester==_semester) {
     _week=_currentWeek;
 }
 else {
@@ -2218,6 +2347,22 @@ document.querySelectorAll('.tab-link').forEach(tab => {
 
 // ------------------------------------------------------------------
 
+function toggleExplanation() {
+    const explanationText = [];
+    if (p1p2p3.p1) {
+        explanationText.push('M1 表示有至少一個課程出席未到一半');
+    }
+    
+    if (p1p2p3.p2 && p1p2p3.p1) {
+        explanationText.push('M2 表示至少一個課程p跟e未到0.6');
+    }
+    else if (p1p2p3.p2) {
+        explanationText.push('M2 表示至少一個課程p跟e未到0.6');
+    }
+
+    // 更新顯示的說明內容
+    document.getElementById('explanation').innerText = explanationText.join('   ');
+}
 
 var p1p2p3 = {
     p1:false,
@@ -2235,12 +2380,14 @@ $(document).ready(function() {
     $('#filterP1').on('click', function() {
         p1p2p3.p1 = !p1p2p3.p1; // 切換 p1 篩選狀態
         filterTable(); // 重新篩選表格
+        toggleExplanation(); // 更新說明
     });
 
     // 篩選 p2
     $('#filterP2').on('click', function() {
         p1p2p3.p2 = !p1p2p3.p2; // 切換 p2 篩選狀態
         filterTable(); // 重新篩選表格
+        toggleExplanation(); // 更新說明
     });
 
     // 篩選 p3
@@ -2264,16 +2411,28 @@ function filterTable() {
     var rows = $('#tbl_course_list tr').not(':first').detach();
 
     rows.sort(function(a, b) {
-        var performanceA = parseFloat($(a).find('th').eq(3).find('span').text());
-        var performanceB = parseFloat($(b).find('th').eq(3).find('span').text());
+    // 取得每個行中對應區域的值
+        var performanceA, performanceB;
 
-        if (performanceSort === 'asc') {
-            return performanceA - performanceB;
-        } else if (performanceSort === 'desc') {
-            return performanceB - performanceA;
+        if (performanceSort === 'green') {
+            performanceA = parseFloat($(a).find('th').eq(3).data('green'));
+            performanceB = parseFloat($(b).find('th').eq(3).data('green'));
+        } else if (performanceSort === 'yellow') {
+            performanceA = parseFloat($(a).find('th').eq(3).data('yellow'));
+            performanceB = parseFloat($(b).find('th').eq(3).data('yellow'));
+        } else if (performanceSort === 'orange') {
+            performanceA = parseFloat($(a).find('th').eq(3).data('orange'));
+            performanceB = parseFloat($(b).find('th').eq(3).data('orange'));
+        } else if (performanceSort === 'red') {
+            performanceA = parseFloat($(a).find('th').eq(3).data('red'));
+            performanceB = parseFloat($(b).find('th').eq(3).data('red'));
         } else {
-            return 0;
+            var idA = parseInt($(a).find('th').eq(0).text());
+            var idB = parseInt($(b).find('th').eq(0).text());
+            return idA-idB; // 如果是預設選項，不進行排序
         }
+        // 確保數據都是數字型態，進行升序或降序比較
+        return performanceB - performanceA;
     });
 
     $.each(rows, function(index, row) {
