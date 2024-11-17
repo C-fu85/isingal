@@ -18,7 +18,7 @@
         rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="../static/static/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="../6869/static/css/sb-admin-2.min.css" rel="stylesheet">
 
     <!-- DataTables  -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.25/datatables.min.css"/>
@@ -91,7 +91,7 @@
             <!-- Begin Page Content -->
             <div class="container-fluid"  id="infoblock_1" >
 
-                <h1 class="h4 mb-2 text-gray-800 pa-left" id='label_course_name'>以下是您本學期每位學生的學習表現：
+                <h1 class="h4 mb-2 text-gray-800 pa-left" id='label_course_name'>本學期學生出席情況：
                     <!-- <button id="resetFilter" style="border-radius: 5px; font-size: 1em;">reset</button>
                     <label><input type="checkbox" id="filterP1"> M1 <span style="font-size: 0.8em;">(出席率低於4成)</span></label> -->
 
@@ -422,7 +422,7 @@ pe_series = [];
 course_name = '';
 
 //setweek
-_currentWeek = 5;
+_currentWeek = 9;
 _currentCategories = [];
 for (let i = 1; i <= _currentWeek; i++) {
     _currentCategories.push(i);
@@ -576,6 +576,7 @@ function input_studentData() {
                             '<option value="default">學號順序</option>' +
                         '</select>' +
                     '</th>' +
+                    '<th title="帶改">總出席次數/總點名次數</th>' +                    
                     '<th style="display:none;">課程代碼</th>' + // 隱藏的課程代碼列
                     '<th style="display:none;">p1</th>' + // 新增隱藏的 p1 列
                     '<th style="display:none;">p2</th>' + // 新增隱藏的 p2 列
@@ -600,11 +601,11 @@ function input_studentData() {
                     let op = cl.o_num;
                     let rp = cl.r_num;
                     let p1_num = cl.p1_num; // 取得 p1 數據
-                    let p2_num = cl.p2_num; // 取得 p2 數據
-                    let p3_num = cl.p3_num; // 取得 p3 數據
                     let student_identity = cl.stu_Identity_code;
                     let studentP = Math.round(cl.avg_p * 1000) / 1000; 
                     let studentE = Math.round(cl.avg_e * 1000) / 1000;
+                    let present = cl.present;
+                    let total_sent = cl.present+cl.absent;
 
                     const _link = '<a href="javascript:void(0);" onclick="handleStudentClick(\'' + student_identity + '\',' + studentP + ',' + studentE + ', \'' + stu_no + '\', \'' + stu_name + '\', \'' + advisor_id + '\', ' + gp + ', ' + yp + ', ' + op + ', ' + rp + ', \'' + course_name_abbr + '\');">' + stu_no + '</a>';
                     var identity = document.createElement("a");
@@ -615,23 +616,22 @@ function input_studentData() {
                     }
 
                     var performance =  parseFloat(gp) + parseFloat(yp); // Calculate the sum of op and rp
-                    var rowStyle = '';
-                    if (p1_num > 0) {
-                        rowStyle = ' style="background-color: rgba(255, 0, 0, 0.1); border: 1px solid rgba(255, 0, 0, 0.3);"';
-                    }
+                    // var rowStyle = '';
+                    // // if (p1_num > 0) {
+                    // //     rowStyle = ' style="background-color: rgba(255, 0, 0, 0.1); border: 1px solid rgba(255, 0, 0, 0.3);"';
+                    // // }
 
-                    var row = '<tr' + rowStyle + ' cellpadding="15px">' + 
+                    var row = '<tr' + ' cellpadding="15px">' + 
                         '<th>' + _link + '</th>' +
                         '<th>' + stu_name + '</th>' + 
                         '<th>' + course_name_abbr + '</th>' + // 班級信息
                         '<th>' + identity + '</th>' +
                         '<th style="display:none;"><span style="display: none;">'+performance+'</span>'+src_g+gp+"  "+src_y+yp+"  "+src_o+op+"  "+src_r+rp+'</th>' +
-                        '<th  title="' + (studentE == 0 ? '沒有點名' : '') + '">' + studentE + '</th>' +                        
+                        '<th  title="' + (studentE == 0 ? '沒有點名' : '') + '">' + studentE + '</th>' +
+                        '<th>' + present +'/'+total_sent+ '</th>' +                        
                         '<th style="display:none;" title="' + (studentP == 0 ? '沒有打成績' : '') + '">' + studentP + '</th>' +
                         '<th style="display:none;">' + course_code_abbr + '</th>' + // 隱藏課程代碼
                         '<th style="display:none;">' + p1_num + '</th>' + // 隱藏的 p1 數據
-                        '<th style="display:none;">' + p2_num + '</th>' + // 隱藏的 p2 數據
-                        '<th style="display:none;">' + p3_num + '</th>' + // 隱藏的 p3 數據
                     '</tr>';
                     
                     table.append(row);
@@ -1623,6 +1623,28 @@ function filterTable() {
             return engagementA - engagementB;
         }
     });
+    rows.sort(function(a, b) {
+        var engagementA = parseFloat($(a).find('th').eq(5).text());  // 6th column (index 5)
+        var engagementB = parseFloat($(b).find('th').eq(5).text());  // 6th column (index 5)
+        
+        // 假設學號在第一列 (index 0)
+        var idA = parseInt($(a).find('th').eq(0).text());
+        var idB = parseInt($(b).find('th').eq(0).text());
+
+        if (engagementA !== engagementB) {
+            if (engagementSort === 'asc') {
+                return engagementA - engagementB;  // 參與度升序
+            } else if (engagementSort === 'default') {
+                return 0;  // 參與度降序
+            } else {
+                return engagementA - engagementB;  // 預設按參與度升序排序
+            }
+        } else {
+            // 如果參與度相同，根據學號進行排序
+            return idA - idB;  // 學號升序排序
+        }
+    });
+
     $.each(rows, function(index, row) {
         $('#tbl_course_list').append(row);
     });
@@ -1635,13 +1657,13 @@ function filterTable() {
         var name = $(this).find('th').eq(1).text();
         var courseClass = $(this).find('th').eq(2).text();
         var identity = $(this).find('th').eq(3).text();
-        var courseCode = $(this).find('th').eq(7).text();
-        var courseGrade = $(this).find('th').eq(7).text().charAt(5); // 獲取隱藏的課程代碼列
-
+        var courseCode = $(this).find('th').eq(8).text();
+        var courseGrade = $(this).find('th').eq(8).text().charAt(5); // 獲取隱藏的課程代碼列
+        
         // 取得 p1, p2, p3 的值
-        var p1Num = parseInt($(this).find('th').eq(8).text()); // 假設第 10 列是 p1_num
-        var p2Num = parseInt($(this).find('th').eq(9).text()); // 假設第 11 列是 p2_num
-        var p3Num = parseInt($(this).find('th').eq(10).text()); // 假設第 12 列是 p3_num
+        var p1Num = parseInt($(this).find('th').eq(9).text()); // 假設第 10 列是 p1_num
+        var p2Num = parseInt($(this).find('th').eq(10).text()); // 假設第 11 列是 p2_num
+        var p3Num = parseInt($(this).find('th').eq(11).text()); // 假設第 12 列是 p3_num
 
         // 根據篩選條件進行篩選
         let showRow = true;

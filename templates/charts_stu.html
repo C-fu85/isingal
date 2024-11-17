@@ -110,7 +110,7 @@
                             </br> engagement: 點名、作業及測驗繳交累計次數相較全班之表現
                             </br>更新至第18週 : 2024.07.7
                         </div>
-
+                        
                         <!-- Donut Chart -->
                         <div class="col-xl-4 col-lg-5">
                             <div class="card shadow mb-4">
@@ -315,7 +315,7 @@ function input_studentId(){//and student name
         url : url_text,
         type : "GET",
         success : function(data) {
-            document.getElementById('student_name').textContent = data + "同學";
+            document.getElementById('student_name').textContent = data.student_name + "同學";
         }
     });
     
