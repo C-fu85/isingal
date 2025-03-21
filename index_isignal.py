@@ -16,10 +16,6 @@ app = Flask(__name__)
 UPLOAD_FOLDER = '/tmp/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours = 2)
-app.secret_key = 'pe_diagram'
-
-admin_account=['064903', '102128', '127504', '408660503', '410000201', '411411639','410000284']
-admin_account.append('409411732')
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/<f1>", methods=['GET', 'POST'])
 def root(f1=''): 
